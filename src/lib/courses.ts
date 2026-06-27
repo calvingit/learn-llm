@@ -36,6 +36,14 @@ export const learnLLMChapters: CourseChapter[] = [
     order: 4,
   },
   {
+    slug: "unit-01-summary",
+    title: "第一单元总结",
+    unit: "第一单元：AI 是怎么发展到大模型的",
+    description:
+      "回顾 AI、机器学习、深度学习和大模型的层层包含关系，梳理 GPT 路线为什么成为普通人的 AI 入口。",
+    order: 4.5,
+  },
+  {
     slug: "chapter-05",
     title: "Token：大模型眼里的文字积木",
     unit: "第二单元：大模型到底是怎么生成文字的",
@@ -71,6 +79,14 @@ export const learnLLMChapters: CourseChapter[] = [
     order: 9,
   },
   {
+    slug: "unit-02-summary",
+    title: "第二单元总结",
+    unit: "第二单元：大模型到底是怎么生成文字的",
+    description:
+      "回顾 token、上下文窗口、费用账本、next-token prediction 和温度这五个核心概念如何串起模型的生成机制。",
+    order: 9.5,
+  },
+  {
     slug: "chapter-10",
     title: "推理：它是真的在思考吗？",
     unit: "第三单元：大模型为什么会“思考”也会“胡说”",
@@ -92,6 +108,13 @@ export const learnLLMChapters: CourseChapter[] = [
     order: 12,
   },
   {
+    slug: "unit-03-summary",
+    title: "第三单元总结",
+    unit: "第三单元：大模型为什么会“思考”也会“胡说”",
+    description: "回顾推理的可检查性、更好的提问方法，以及把模型输出分三层审视来应对幻觉风险。",
+    order: 12.5,
+  },
+  {
     slug: "chapter-13",
     title: "RAG：给 AI 一场开卷考试",
     unit: "第四单元：怎样让大模型更可靠",
@@ -111,6 +134,14 @@ export const learnLLMChapters: CourseChapter[] = [
     unit: "第四单元：怎样让大模型更可靠",
     description: "看懂预训练、指令微调和偏好对齐如何把模型训练成更可用的助手。",
     order: 15,
+  },
+  {
+    slug: "unit-04-summary",
+    title: "第四单元总结",
+    unit: "第四单元：怎样让大模型更可靠",
+    description:
+      "回顾 RAG、Embedding 和对齐如何各司其职，理解可靠性是一个系统工程而非单一技术能解决。",
+    order: 15.5,
   },
   {
     slug: "chapter-16",
@@ -141,6 +172,14 @@ export const learnLLMChapters: CourseChapter[] = [
     order: 19,
   },
   {
+    slug: "unit-05-summary",
+    title: "第五单元总结",
+    unit: "第五单元：从 Prompt 到 Agent",
+    description:
+      "回顾 Prompt 的上下文控制、工具调用的调度台模型、Agent 的执行闭环，以及能力越强越需要治理的核心原则。",
+    order: 19.5,
+  },
+  {
     slug: "chapter-20",
     title: "Workflow：不要追求一个万能 Prompt",
     unit: "第六单元：普通人如何正确使用大模型",
@@ -153,6 +192,14 @@ export const learnLLMChapters: CourseChapter[] = [
     unit: "第六单元：普通人如何正确使用大模型",
     description: "总结高收益使用场景和高风险复核边界，形成可执行的协作原则。",
     order: 21,
+  },
+  {
+    slug: "unit-06-summary",
+    title: "第六单元总结",
+    unit: "第六单元：普通人如何正确使用大模型",
+    description:
+      "回顾 Workflow 拆解方法和 AI 协作边界的风险分层判断，形成可执行的 AI 日常使用方法。",
+    order: 21.5,
   },
   {
     slug: "chapter-22",
@@ -174,6 +221,21 @@ export const learnLLMChapters: CourseChapter[] = [
     unit: "第七单元：如果你还想知道更多",
     description: "认识主流开源模型类型，理解各自适合的场景和局限性。",
     order: 24,
+  },
+  {
+    slug: "chapter-25",
+    title: "多模态：为什么 AI 不只是会聊天？",
+    unit: "第七单元：如果你还想知道更多",
+    description: "理解模型除了文字还能理解图片、文档、语音和视频，知道什么时候纯文本就够用。",
+    order: 25,
+  },
+  {
+    slug: "unit-07-summary",
+    title: "第七单元总结",
+    unit: "第七单元：如果你还想知道更多",
+    description:
+      "回顾蒸馏、训练流程、开源模型选择和多模态能力，完成从'AI 是什么'到'怎么用'到'怎么来'的完整学习路径。",
+    order: 25.5,
   },
 ];
 

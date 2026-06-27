@@ -3,15 +3,24 @@ import { getAdjacentChapters, getChapterBySlug, learnLLMChapters } from "./cours
 
 describe("learnLLMChapters", () => {
   it("defines an expanded course with contiguous slugs and orders", () => {
-    expect(learnLLMChapters.length).toBeGreaterThan(12);
-    expect(learnLLMChapters.map((chapter) => chapter.slug)).toEqual(
-      learnLLMChapters.map((_, index) => {
-        return `chapter-${String(index + 1).padStart(2, "0")}`;
-      }),
-    );
-    expect(learnLLMChapters.map((chapter) => chapter.order)).toEqual(
-      learnLLMChapters.map((_, index) => index + 1),
-    );
+    expect(learnLLMChapters.length).toBeGreaterThan(24);
+    // Verify all 25 content chapters are present in order
+    const chapterSlugs = learnLLMChapters.map((c) => c.slug);
+    for (let i = 1; i <= 25; i++) {
+      expect(chapterSlugs).toContain(`chapter-${String(i).padStart(2, "0")}`);
+    }
+    // Verify all 7 unit summaries are present
+    for (let i = 1; i <= 7; i++) {
+      expect(chapterSlugs).toContain(`unit-0${i}-summary`);
+    }
+    // Verify ascending orders
+    const orders = learnLLMChapters.map((c) => c.order);
+    for (let i = 1; i < orders.length; i++) {
+      expect(
+        orders[i],
+        `order[${i}] (${orders[i]}) > order[${i - 1}] (${orders[i - 1]})`,
+      ).toBeGreaterThan(orders[i - 1]);
+    }
   });
 
   it("keeps the required chapter fields populated", () => {
@@ -46,7 +55,7 @@ describe("learnLLMChapters", () => {
       next: { slug: "chapter-02" },
     });
     expect(getAdjacentChapters(learnLLMChapters.at(-1)?.slug ?? "")).toMatchObject({
-      previous: { slug: "chapter-23" },
+      previous: { slug: "chapter-25" },
     });
   });
 });

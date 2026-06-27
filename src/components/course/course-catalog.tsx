@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { ArrowRight, CheckCircle2, Circle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,16 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
   const progressValue = chapters.length > 0 ? (completedCount / chapters.length) * 100 : 0;
   const nextChapter = chapters.find((chapter) => !completedSet.has(chapter.slug)) ?? chapters[0];
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    // 延迟确保 DOM 已渲染
+    requestAnimationFrame(() => {
+      const el = document.getElementById(hash.slice(1));
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    });
+  }, []);
+
   return (
     <div className="flex flex-col gap-8">
       <section className="bg-card rounded-xl border p-5 shadow-sm">
@@ -61,8 +72,12 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
         <Progress className="mt-5" value={progressValue} />
       </section>
 
-      {groupByUnit(chapters).map((group) => (
-        <section key={group.unit} className="flex flex-col gap-4">
+      {groupByUnit(chapters).map((group, groupIndex) => (
+        <section
+          key={group.unit}
+          id={`unit-${groupIndex + 1}`}
+          className="flex scroll-mt-8 flex-col gap-4"
+        >
           <div className="flex items-center gap-3">
             <div className="bg-primary size-2 rounded-full" />
             <h2 className="text-xl font-semibold tracking-normal">{group.unit}</h2>

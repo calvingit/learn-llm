@@ -61,7 +61,11 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <header className="bg-card mt-8 rounded-xl border p-6 shadow-sm md:p-8">
           <div className="flex flex-wrap gap-3">
             <Badge variant="muted">{chapter.unit}</Badge>
-            <Badge variant="secondary">第 {String(chapter.order).padStart(2, "0")} 章</Badge>
+            <Badge variant="secondary">
+              {chapter.slug.startsWith("unit-")
+                ? "单元总结"
+                : `第 ${String(chapter.order).padStart(2, "0")} 章`}
+            </Badge>
           </div>
           <h1 className="mt-5 text-4xl leading-tight font-semibold tracking-normal md:text-5xl">
             {chapter.title}

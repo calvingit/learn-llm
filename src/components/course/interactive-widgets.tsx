@@ -380,6 +380,11 @@ const tokenColors = [
 export function TokenSplitter() {
   const [text, setText] = useState("我喜欢 Apple，也喜欢学习 LLM!");
   const tokens = useMemo(() => splitTextForTokenDemo(text), [text]);
+  const tokenGroups = [
+    { label: "原始句子", detail: text || "输入文字后会出现在这里" },
+    { label: "教学拆分", detail: tokens.length ? tokens.join(" / ") : "等待输入" },
+    { label: "模型处理", detail: `${tokens.length} 个可见小块会一起进入上下文窗口` },
+  ];
 
   return (
     <WidgetShell
@@ -391,6 +396,16 @@ export function TokenSplitter() {
         value={text}
         onChange={(event) => setText(event.target.value)}
       />
+      <div className="mt-4 grid gap-3 md:grid-cols-3">
+        {tokenGroups.map((group, index) => (
+          <div key={group.label} className="bg-muted rounded-lg border p-4">
+            <p className="text-primary my-0 text-sm font-semibold">
+              {index + 1}. {group.label}
+            </p>
+            <p className="mt-2 mb-0 text-sm leading-6 break-words">{group.detail}</p>
+          </div>
+        ))}
+      </div>
       <div className="mt-4 flex flex-wrap gap-2">
         {tokens.map((token, index) => (
           <span
@@ -405,7 +420,8 @@ export function TokenSplitter() {
         ))}
       </div>
       <p className="text-muted-foreground mt-4 mb-0 text-sm">
-        这只是教学拆分，不等同于真实模型 tokenizer；它用来帮助你建立“文本会被切块”的直觉。
+        这只是教学拆分，不等同于真实模型
+        tokenizer；它用来帮助你建立“模型不是按完整句子理解，而是按小块处理”的直觉。
       </p>
     </WidgetShell>
   );
@@ -415,6 +431,41 @@ export function ContextWindowMeter() {
   const [messages, setMessages] = useState(9);
   const visibleMessages = Math.min(messages, 6);
   const forgottenMessages = Math.max(messages - visibleMessages, 0);
+  const historySize = Math.min(38, 8 + messages * 3);
+  const sourceSize = messages > 8 ? 22 : 14;
+  const answerSize = Math.max(12, 100 - 12 - historySize - sourceSize - 10);
+  const segments = [
+    {
+      label: "系统指令",
+      value: 12,
+      detail: "产品预设的角色、语气、安全边界。",
+      className: "bg-primary",
+    },
+    {
+      label: "历史对话",
+      value: historySize,
+      detail: "轮次越多，占用越大，旧内容会被挤出。",
+      className: "bg-secondary",
+    },
+    {
+      label: "外部资料",
+      value: sourceSize,
+      detail: "RAG、上传文件、网页片段也要占窗口。",
+      className: "bg-accent",
+    },
+    {
+      label: "当前问题",
+      value: 10,
+      detail: "用户这一次真正要解决的问题。",
+      className: "bg-foreground",
+    },
+    {
+      label: "回答空间",
+      value: answerSize,
+      detail: "留给模型生成答案的余量。",
+      className: "bg-muted-foreground",
+    },
+  ];
 
   return (
     <WidgetShell
@@ -429,6 +480,26 @@ export function ContextWindowMeter() {
         value={messages}
         onChange={(event) => setMessages(Number(event.target.value))}
       />
+      <div className="mt-5 overflow-hidden rounded-xl border">
+        <div className="flex h-12 w-full">
+          {segments.map((segment) => (
+            <div
+              key={segment.label}
+              className={cn("min-w-3 transition-all", segment.className)}
+              style={{ width: `${segment.value}%` }}
+              title={`${segment.label}: ${segment.value}%`}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="mt-4 grid gap-3 md:grid-cols-5">
+        {segments.map((segment) => (
+          <div key={segment.label} className="bg-card rounded-lg border p-3">
+            <p className="my-0 text-sm font-semibold">{segment.label}</p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">{segment.detail}</p>
+          </div>
+        ))}
+      </div>
       <div className="mt-4 grid gap-3">
         {Array.from({ length: messages }, (_, index) => {
           const visible = index >= messages - visibleMessages;
@@ -456,9 +527,40 @@ export function ContextWindowMeter() {
   );
 }
 
+const tokenCostScenarios = {
+  short: {
+    label: "短问答",
+    inputTokens: 600,
+    outputTokens: 300,
+    note: "日常问答通常便宜，主要成本来自本轮输入和回答。",
+  },
+  summary: {
+    label: "长文总结",
+    inputTokens: 12000,
+    outputTokens: 1200,
+    note: "长文一次性塞入上下文，输入成本会明显上升。",
+  },
+  chat: {
+    label: "多轮对话",
+    inputTokens: 6500,
+    outputTokens: 900,
+    note: "历史对话会反复进入上下文，越聊越占账本。",
+  },
+  rag: {
+    label: "带资料问答",
+    inputTokens: 9800,
+    outputTokens: 1100,
+    note: "检索片段也算输入 Token，RAG 不是免费魔法。",
+  },
+};
+
 export function TokenCostCalculator() {
-  const [inputTokens, setInputTokens] = useState(2000);
-  const [outputTokens, setOutputTokens] = useState(800);
+  const [scenarioKey, setScenarioKey] = useState<keyof typeof tokenCostScenarios>("summary");
+  const [customInputTokens, setCustomInputTokens] = useState(2000);
+  const [customOutputTokens, setCustomOutputTokens] = useState(800);
+  const scenario = tokenCostScenarios[scenarioKey];
+  const inputTokens = Math.max(scenario.inputTokens, customInputTokens);
+  const outputTokens = Math.max(scenario.outputTokens, customOutputTokens);
   const estimate = estimateTokenCost({
     inputTokens,
     outputTokens,
@@ -471,6 +573,24 @@ export function TokenCostCalculator() {
       title="Token 账本"
       description="调节输入和输出长度，观察费用为什么通常由输入和生成共同决定。"
     >
+      <div className="grid gap-3 md:grid-cols-4">
+        {Object.entries(tokenCostScenarios).map(([key, item]) => (
+          <button
+            key={key}
+            type="button"
+            className={cn(
+              "rounded-lg border p-4 text-left transition-colors",
+              scenarioKey === key ? "border-primary bg-primary/8" : "bg-card hover:bg-muted",
+            )}
+            onClick={() => setScenarioKey(key as keyof typeof tokenCostScenarios)}
+          >
+            <span className="text-sm font-semibold">{item.label}</span>
+            <span className="text-muted-foreground mt-2 block text-xs leading-5">
+              {item.inputTokens.toLocaleString()} 输入 / {item.outputTokens.toLocaleString()} 输出
+            </span>
+          </button>
+        ))}
+      </div>
       <div className="grid gap-5 md:grid-cols-2">
         <label className="bg-card rounded-lg border p-4">
           <span className="text-sm font-semibold">输入 Token：{inputTokens}</span>
@@ -480,8 +600,8 @@ export function TokenCostCalculator() {
             min="200"
             max="20000"
             step="200"
-            value={inputTokens}
-            onChange={(event) => setInputTokens(Number(event.target.value))}
+            value={customInputTokens}
+            onChange={(event) => setCustomInputTokens(Number(event.target.value))}
           />
         </label>
         <label className="bg-card rounded-lg border p-4">
@@ -492,11 +612,14 @@ export function TokenCostCalculator() {
             min="100"
             max="8000"
             step="100"
-            value={outputTokens}
-            onChange={(event) => setOutputTokens(Number(event.target.value))}
+            value={customOutputTokens}
+            onChange={(event) => setCustomOutputTokens(Number(event.target.value))}
           />
         </label>
       </div>
+      <p className="bg-card mt-4 mb-0 rounded-lg border p-4 text-sm leading-6">
+        当前场景：<span className="font-semibold">{scenario.label}</span>。{scenario.note}
+      </p>
       <div className="bg-muted mt-5 grid gap-3 rounded-xl p-5 sm:grid-cols-3">
         <p className="my-0 text-sm">输入费用：${estimate.inputCost.toFixed(6)}</p>
         <p className="my-0 text-sm">输出费用：${estimate.outputCost.toFixed(6)}</p>
@@ -560,6 +683,11 @@ export function PredictNextWordSimulator() {
 export function SamplingPlayground() {
   const [temperature, setTemperature] = useState(0.7);
   const mode = temperature < 0.35 ? "稳定严谨" : temperature > 1 ? "发散创作" : "平衡表达";
+  const candidates = nextWordCandidates.map((candidate) => {
+    const adjusted = Math.pow(candidate.probability / 100, 1 / Math.max(temperature, 0.1));
+    return { ...candidate, adjusted };
+  });
+  const total = candidates.reduce((sum, candidate) => sum + candidate.adjusted, 0);
 
   return (
     <WidgetShell title="温度滑杆" description="温度越低越稳定，温度越高越容易尝试低概率表达。">
@@ -578,6 +706,23 @@ export function SamplingPlayground() {
           onChange={(event) => setTemperature(Number(event.target.value))}
         />
       </label>
+      <div className="mt-4 grid gap-3">
+        {candidates.map((candidate) => {
+          const width = Math.round((candidate.adjusted / total) * 100);
+
+          return (
+            <div key={candidate.word} className="bg-card rounded-lg border p-4">
+              <div className="flex items-center justify-between gap-4 text-sm">
+                <span className="font-semibold">{candidate.word}</span>
+                <span className="text-muted-foreground">{width}%</span>
+              </div>
+              <div className="bg-muted mt-3 h-2 rounded-full">
+                <div className="bg-primary h-2 rounded-full" style={{ width: `${width}%` }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
       <div className="bg-muted mt-4 rounded-xl p-5">
         <p className="my-0 text-lg font-semibold">{mode}</p>
         <p className="text-muted-foreground mt-3 mb-0 leading-7">
@@ -682,16 +827,19 @@ const hallucinationExamples = [
     question: "鲁迅和周树人打架谁赢了？",
     answer: "这个问题把同一个人的两个名字当成了两个人。正确处理方式是先纠正前提。",
     risk: "错误前提",
+    verdict: "需要先改问题",
   },
   {
     question: "请列出某不存在论文的三条结论",
     answer: "如果模型没有检索依据，却仍然给出作者、期刊和结论，就属于高风险编造。",
     risk: "资料空白",
+    verdict: "需要外部核查",
   },
   {
     question: "某公司明天股价一定会涨吗？",
     answer: "模型不能保证未来事实。它最多能整理影响因素，不能替人做确定判断。",
     risk: "过度预测",
+    verdict: "只能给推测",
   },
 ];
 
@@ -722,6 +870,20 @@ export function HallucinationDetector() {
       <div className="bg-muted mt-5 rounded-xl border p-5">
         <p className="my-0 font-semibold">{active.question}</p>
         <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{active.answer}</p>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          {["听起来合理", "有来源支持", "需要外部核查"].map((label) => (
+            <div key={label} className="bg-card rounded-lg border p-3 text-sm">
+              <p className="my-0 font-semibold">{label}</p>
+              <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">
+                {label === "听起来合理"
+                  ? "只能说明语言顺，不代表事实真。"
+                  : label === "有来源支持"
+                    ? "要看是否真的引用了可核对材料。"
+                    : active.verdict}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </WidgetShell>
   );
@@ -729,6 +891,13 @@ export function HallucinationDetector() {
 
 export function RAGSimulator() {
   const [ragEnabled, setRagEnabled] = useState(true);
+  const pipeline = [
+    { label: "用户问题", detail: "请假需要提前几天申请？" },
+    { label: "检索资料", detail: "从企业知识库找制度片段。" },
+    { label: "挑选片段", detail: "选择与请假流程最相关的原文。" },
+    { label: "生成回答", detail: "把资料转成自然语言答案。" },
+    { label: "标出依据", detail: "提醒用户回到原文确认适用范围。" },
+  ];
 
   return (
     <WidgetShell
@@ -750,6 +919,16 @@ export function RAGSimulator() {
         >
           关闭 RAG
         </Button>
+      </div>
+      <div className="mt-5 grid gap-3 md:grid-cols-5">
+        {pipeline.map((step, index) => (
+          <div key={step.label} className="bg-card rounded-lg border p-3">
+            <p className="text-primary my-0 text-sm font-semibold">
+              {index + 1}. {step.label}
+            </p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">{step.detail}</p>
+          </div>
+        ))}
       </div>
       <div className="mt-5 grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
         <div className="bg-card rounded-xl border p-5">
@@ -775,10 +954,10 @@ export function RAGSimulator() {
 }
 
 const embeddingDocs = [
-  { title: "报销流程", x: 22, y: 64, topic: "财务" },
-  { title: "请假制度", x: 66, y: 42, topic: "人事" },
-  { title: "年假余额", x: 72, y: 48, topic: "人事" },
-  { title: "服务器告警", x: 28, y: 22, topic: "技术" },
+  { title: "报销流程", x: 22, y: 64, topic: "财务", sample: "发票、审批、付款" },
+  { title: "请假制度", x: 66, y: 42, topic: "人事", sample: "申请、主管、考勤" },
+  { title: "年假余额", x: 72, y: 48, topic: "人事", sample: "休假、额度、结转" },
+  { title: "服务器告警", x: 28, y: 22, topic: "技术", sample: "监控、故障、恢复" },
 ];
 
 export function EmbeddingMap() {
@@ -807,6 +986,9 @@ export function EmbeddingMap() {
         </Button>
       </div>
       <div className="bg-muted relative mt-5 aspect-[16/9] overflow-hidden rounded-xl border">
+        <div className="absolute top-3 left-3 rounded-md bg-white/90 px-3 py-2 text-xs font-semibold">
+          查询点
+        </div>
         <div
           className="bg-primary ring-primary/20 absolute size-5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
           style={{ left: `${target.x}%`, top: `${target.y}%` }}
@@ -827,6 +1009,16 @@ export function EmbeddingMap() {
             </div>
           );
         })}
+      </div>
+      <div className="mt-4 grid gap-3 md:grid-cols-4">
+        {embeddingDocs.map((doc) => (
+          <div key={doc.title} className="bg-card rounded-lg border p-3 text-sm">
+            <p className="my-0 font-semibold">{doc.title}</p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">
+              {doc.topic}：{doc.sample}
+            </p>
+          </div>
+        ))}
       </div>
     </WidgetShell>
   );
@@ -892,11 +1084,13 @@ const promptModes = {
     label: "模糊 Prompt",
     prompt: "帮我写个总结。",
     result: "内容会比较泛，模型不知道读者是谁、重点是什么、需要多长、输出成什么格式。",
+    blocks: ["任务"],
   },
   structured: {
     label: "结构化 Prompt",
     prompt: "你是产品经理，请把这段访谈整理成 5 条用户痛点，用 Markdown 列表输出，并标出证据句。",
     result: "角色、任务、边界和格式都明确，模型更容易产出可检查、可复用的结果。",
+    blocks: ["背景", "任务", "边界", "输出格式", "检查要求"],
   },
 };
 
@@ -925,6 +1119,25 @@ export function PromptSandbox() {
         <div className="bg-card rounded-xl border p-5">
           <p className="text-primary my-0 text-sm font-semibold">Prompt</p>
           <p className="mt-3 mb-0 text-sm leading-7">{active.prompt}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {["背景", "任务", "边界", "输出格式", "检查要求"].map((block) => {
+              const included = active.blocks.includes(block);
+
+              return (
+                <span
+                  key={block}
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-xs font-semibold",
+                    included
+                      ? "border-primary bg-primary/8 text-primary"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  {block}
+                </span>
+              );
+            })}
+          </div>
         </div>
         <div className="bg-muted rounded-xl p-5">
           <p className="text-primary my-0 text-sm font-semibold">可能结果</p>
@@ -936,13 +1149,14 @@ export function PromptSandbox() {
 }
 
 const toolSteps = [
-  { title: "模型输出意图", detail: "需要查询今天北京天气。", icon: Brain },
+  { title: "模型决定下一步", detail: "需要查询今天北京天气，而不是凭记忆回答。", icon: Brain },
   {
     title: "系统匹配工具",
     detail: "把意图转换成 weather.search({ city: '北京' })。",
     icon: Wrench,
   },
-  { title: "工具返回结果", detail: "北京：多云，28 摄氏度，微风。", icon: Search },
+  { title: "工具负责执行", detail: "真实工具查询天气服务，返回结构化结果。", icon: Search },
+  { title: "观察结果回到模型", detail: "北京：多云，28 摄氏度，微风。", icon: Database },
   { title: "模型组织回答", detail: "建议穿轻薄外套，并提醒带伞看实时预报。", icon: Hand },
 ];
 
@@ -989,11 +1203,11 @@ export function ToolCallingStepper() {
 }
 
 const agentSteps = [
-  "理解目标：查询天气并给出穿搭建议。",
-  "选择工具：调用天气查询，而不是凭印象回答。",
-  "观察结果：多云、28 摄氏度、微风。",
-  "生成建议：短袖或薄衬衫，通勤可备轻薄外套。",
-  "检查边界：天气会变化，出门前再看实时预报。",
+  "思考：理解目标是查询天气并给出穿搭建议。",
+  "行动：调用天气查询，而不是凭印象回答。",
+  "观察：读取多云、28 摄氏度、微风等工具结果。",
+  "再决策：判断信息已经足够，不需要继续查。",
+  "停止：生成建议，并提醒天气会变化。",
 ];
 
 export function AgentWorkflowViewer() {
@@ -1030,25 +1244,60 @@ export function AgentWorkflowViewer() {
 }
 
 const debuggerFixes = [
-  "限制同一工具最多连续调用 2 次",
-  "每轮都检查原始目标是否已达成",
-  "工具不存在时必须向用户说明，而不是编造",
+  "停止条件：限制同一工具最多连续调用 2 次",
+  "人类确认：高风险动作执行前必须等待用户确认",
+  "权限边界：工具不存在时说明失败，而不是编造结果",
+  "日志追踪：记录每次调用的输入、输出和原因",
+];
+
+const debuggerFailures = [
+  {
+    label: "目标漂移",
+    detail: "原本只要查天气，执行中却开始规划整周行程。",
+  },
+  {
+    label: "重复循环",
+    detail: "反复调用搜索工具，却不判断答案是否已经足够。",
+  },
+  {
+    label: "工具误用",
+    detail: "把发邮件工具当作笔记工具，可能把草稿发出去。",
+  },
+  {
+    label: "伪造结果",
+    detail: "工具失败后仍假装查到了结果。",
+  },
 ];
 
 export function AgentDebugger() {
   const [fixes, setFixes] = useState<string[]>([]);
+  const [failureIndex, setFailureIndex] = useState(1);
   const stable = fixes.length === debuggerFixes.length;
+  const failure = debuggerFailures[failureIndex];
 
   return (
     <WidgetShell title="Agent 调试台" description="给失控的 Agent 加边界，观察它如何从循环中恢复。">
+      <div className="grid gap-3 md:grid-cols-4">
+        {debuggerFailures.map((item, index) => (
+          <button
+            key={item.label}
+            type="button"
+            className={cn(
+              "rounded-lg border p-3 text-left text-sm transition-colors",
+              failureIndex === index ? "border-primary bg-primary/8" : "bg-card hover:bg-muted",
+            )}
+            onClick={() => setFailureIndex(index)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
       <div className="bg-muted rounded-xl border p-5">
         <p className="my-0 flex items-center gap-2 font-semibold">
           <AlertTriangle className="text-accent size-4" />
-          当前问题
+          当前问题：{failure.label}
         </p>
-        <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">
-          Agent 反复调用搜索工具，但没有判断搜索结果是否已经足够，因此一直停不下来。
-        </p>
+        <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{failure.detail}</p>
       </div>
       <div className="mt-4 grid gap-3">
         {debuggerFixes.map((fix) => {
@@ -1251,6 +1500,9 @@ const trainingStages = [
   {
     title: "数据准备",
     icon: Database,
+    goal: "决定模型能看到什么材料",
+    input: "网页、书籍、论文、代码、对话等原始数据",
+    output: "清洗后的训练语料",
     detail:
       "收集海量文本：网页、书籍、论文、代码、对话记录。数据需要清洗去重，剔除低质量和有害内容。这一步决定了模型的知识广度和语言基础。",
     metaphor: "像给一个学生准备图书馆——书的质量和多样性直接影响他将来能学到什么。",
@@ -1258,20 +1510,39 @@ const trainingStages = [
   {
     title: "预训练",
     icon: Brain,
+    goal: "打语言和知识地基",
+    input: "清洗后的大规模文本",
+    output: "会续写但还不像助手的基座模型",
     detail:
       "模型在清洗后的数据上学习预测下一个词。这个阶段消耗最多的计算资源，可能持续数周到数月。模型从海量文本中学会语言模式、常识关联和基本推理。",
     metaphor: "像学生读完整个图书馆——不是背下每本书，而是建立了广泛的知识和语感。",
   },
   {
-    title: "指令微调",
+    title: "SFT 指令微调",
     icon: ListChecks,
+    goal: "学会按用户指令回答",
+    input: "高质量的问题与理想答案",
+    output: "懂基本对话格式的助手模型",
     detail:
       "用人工编写的问答范例教模型按指令完成任务。模型学会理解「帮我总结」「翻译成英文」这类指令，并按照期望的格式输出。",
     metaphor: "像岗前培训——读了书不代表知道怎样做客服、写报告或回答专业问题。",
   },
   {
-    title: "偏好对齐",
+    title: "RL 强化学习",
+    icon: RefreshCcw,
+    goal: "通过可验证反馈练专精能力",
+    input: "数学题、代码题、自动评分或测试结果",
+    output: "在推理、代码等方向更强的模型",
+    detail:
+      "强化学习让模型反复尝试，并根据奖励信号调整行为。代码可以用测试用例评分，数学可以核对答案，推理可以训练更稳的解题路径。",
+    metaphor: "像做题训练——只看标准答案不够，还要反复练习、得到反馈、修正策略。",
+  },
+  {
+    title: "RLHF 偏好对齐",
     icon: ShieldCheck,
+    goal: "学习什么回答更有帮助、更诚实、更安全",
+    input: "人类对多个回答的排序和反馈",
+    output: "更符合安全边界和使用偏好的助手",
     detail:
       "人类标注者对模型的多个回答进行偏好排序，模型学习怎样的回答更有帮助、更诚实、更安全。这一阶段让模型学会拒绝危险请求，减少有害输出。",
     metaphor: "像行为规范考核——模型学会了什么该说、什么不该说，怎样回答对使用者最有帮助。",
@@ -1304,9 +1575,23 @@ export function TrainingTimeline() {
         <p className="my-0 flex items-center gap-2 font-semibold">
           <Icon className="text-primary size-4" />第 {activeIndex + 1} 步：{active.title}
         </p>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="bg-muted rounded-lg p-3">
+            <p className="my-0 text-sm font-semibold">目标</p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">{active.goal}</p>
+          </div>
+          <div className="bg-muted rounded-lg p-3">
+            <p className="my-0 text-sm font-semibold">输入材料</p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">{active.input}</p>
+          </div>
+          <div className="bg-muted rounded-lg p-3">
+            <p className="my-0 text-sm font-semibold">产出行为</p>
+            <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">{active.output}</p>
+          </div>
+        </div>
         <p className="mt-3 mb-0 leading-7">{active.detail}</p>
         <div className="bg-muted mt-4 rounded-lg p-4">
-          <p className="text-muted-foreground my-0 text-sm leading-6">💡 {active.metaphor}</p>
+          <p className="text-muted-foreground my-0 text-sm leading-6">{active.metaphor}</p>
         </div>
       </div>
       <div className="mt-4 flex items-center gap-2">
@@ -1334,6 +1619,7 @@ const modelCategories = [
     bestFor: "日常对话、写作、总结、翻译",
     drawback: "部分模型在中文理解上不如商业闭源模型。",
     tag: "最常用",
+    scores: { privacy: 3, cost: 3, deployment: 3, stability: 3, frontier: 3 },
   },
   {
     name: "代码模型",
@@ -1342,6 +1628,7 @@ const modelCategories = [
     bestFor: "代码生成、补全、解释、重构",
     drawback: "不擅长非编程类任务，需要配合其它模型使用。",
     tag: "开发者首选",
+    scores: { privacy: 3, cost: 4, deployment: 3, stability: 3, frontier: 4 },
   },
   {
     name: "小型端侧模型",
@@ -1350,6 +1637,7 @@ const modelCategories = [
     bestFor: "手机本地运行、离线翻译、隐私敏感场景",
     drawback: "能力和知识广度明显弱于大模型，仅适合轻量任务。",
     tag: "手机可用",
+    scores: { privacy: 5, cost: 5, deployment: 5, stability: 4, frontier: 2 },
   },
   {
     name: "多模态模型",
@@ -1358,19 +1646,51 @@ const modelCategories = [
     bestFor: "图片理解、图表解读、OCR 文字提取",
     drawback: "对计算资源要求更高，部署门槛高于纯文本模型。",
     tag: "能看图",
+    scores: { privacy: 3, cost: 2, deployment: 2, stability: 3, frontier: 5 },
   },
 ];
 
+const modelPriorities = [
+  { key: "privacy", label: "隐私" },
+  { key: "cost", label: "成本" },
+  { key: "deployment", label: "部署能力" },
+  { key: "stability", label: "稳定性" },
+  { key: "frontier", label: "前沿能力" },
+] as const;
+
 export function ModelLandscape() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [priority, setPriority] = useState<(typeof modelPriorities)[number]["key"]>("privacy");
   const active = modelCategories[activeIndex];
   const Icon = active.icon;
+  const recommended = modelCategories.reduce((best, item) => {
+    return item.scores[priority] > best.scores[priority] ? item : best;
+  }, modelCategories[0]);
 
   return (
     <WidgetShell
       title="开源模型类型速览"
       description="点击卡片，了解每种开源模型适合什么场景、有什么局限。"
     >
+      <div className="mb-4 flex flex-wrap gap-2">
+        {modelPriorities.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors",
+              priority === item.key ? "border-primary bg-primary text-white" : "bg-card",
+            )}
+            onClick={() => setPriority(item.key)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <p className="bg-muted mb-4 rounded-lg p-4 text-sm leading-6">
+        当前优先考虑：{modelPriorities.find((item) => item.key === priority)?.label}。推荐先看{" "}
+        <span className="font-semibold">{recommended.name}</span>，再结合实际任务测试。
+      </p>
       <div className="grid gap-3 md:grid-cols-2">
         {modelCategories.map((item, index) => (
           <button
@@ -1411,6 +1731,19 @@ export function ModelLandscape() {
             <dd className="text-muted-foreground mt-1 ml-0">{active.drawback}</dd>
           </div>
         </dl>
+        <div className="mt-5 grid gap-2">
+          {modelPriorities.map((item) => (
+            <div key={item.key} className="grid grid-cols-[5rem_1fr] items-center gap-3">
+              <span className="text-sm font-medium">{item.label}</span>
+              <div className="bg-muted h-2 rounded-full">
+                <div
+                  className="bg-primary h-2 rounded-full"
+                  style={{ width: `${active.scores[item.key] * 20}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </WidgetShell>
   );

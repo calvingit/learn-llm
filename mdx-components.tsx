@@ -2,6 +2,7 @@ import type { MDXComponents } from "mdx/types";
 
 import { AgentFlow } from "@/components/course/agent-flow";
 import { AITimeline } from "@/components/course/ai-timeline";
+import { CourseVisual } from "@/components/course/course-visual";
 import {
   AgentDebugger,
   AgentWorkflowViewer,
@@ -29,12 +30,14 @@ import {
   WorkflowBuilder,
 } from "@/components/course/interactive-widgets";
 import { NextSentenceGame } from "@/components/course/next-sentence-game";
+import { UnitQuiz } from "@/components/course/unit-quiz";
 import { cn } from "@/lib/utils";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     AITimeline,
     AgentFlow,
+    CourseVisual,
     NextSentenceGame,
     AgentDebugger,
     AgentWorkflowViewer,
@@ -60,6 +63,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DistillationDemo,
     ModelLandscape,
     WorkflowBuilder,
+    UnitQuiz,
     h2: ({ className, ...props }) => (
       <h2
         className={cn(

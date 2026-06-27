@@ -24,6 +24,14 @@ import Chapter21 from "@/content/courses/learn-llm/chapter-21.mdx";
 import Chapter22 from "@/content/courses/learn-llm/chapter-22.mdx";
 import Chapter23 from "@/content/courses/learn-llm/chapter-23.mdx";
 import Chapter24 from "@/content/courses/learn-llm/chapter-24.mdx";
+import Chapter25 from "@/content/courses/learn-llm/chapter-25.mdx";
+import Unit01Summary from "@/content/courses/learn-llm/unit-01-summary.mdx";
+import Unit02Summary from "@/content/courses/learn-llm/unit-02-summary.mdx";
+import Unit03Summary from "@/content/courses/learn-llm/unit-03-summary.mdx";
+import Unit04Summary from "@/content/courses/learn-llm/unit-04-summary.mdx";
+import Unit05Summary from "@/content/courses/learn-llm/unit-05-summary.mdx";
+import Unit06Summary from "@/content/courses/learn-llm/unit-06-summary.mdx";
+import Unit07Summary from "@/content/courses/learn-llm/unit-07-summary.mdx";
 
 const chapterContentBySlug: Record<string, ComponentType> = {
   "chapter-01": Chapter01,
@@ -50,6 +58,14 @@ const chapterContentBySlug: Record<string, ComponentType> = {
   "chapter-22": Chapter22,
   "chapter-23": Chapter23,
   "chapter-24": Chapter24,
+  "chapter-25": Chapter25,
+  "unit-01-summary": Unit01Summary,
+  "unit-02-summary": Unit02Summary,
+  "unit-03-summary": Unit03Summary,
+  "unit-04-summary": Unit04Summary,
+  "unit-05-summary": Unit05Summary,
+  "unit-06-summary": Unit06Summary,
+  "unit-07-summary": Unit07Summary,
 };
 
 export function getChapterContent(slug: string) {

@@ -5,7 +5,14 @@ import { afterEach, describe, expect, it } from "vitest";
 import { createRoot, type Root } from "react-dom/client";
 
 import { ChapterCompletion } from "./chapter-completion";
-import { AiHierarchyMap, LearningByExamples } from "./interactive-widgets";
+import {
+  AiHierarchyMap,
+  ContextWindowMeter,
+  LearningByExamples,
+  ModelLandscape,
+  RAGSimulator,
+  TokenCostCalculator,
+} from "./interactive-widgets";
 import { learnLLMChapters } from "@/lib/courses";
 
 let root: Root | undefined;
@@ -111,12 +118,12 @@ describe("course client interactions", () => {
       <ChapterCompletion chapter={learnLLMChapters[0]} chapters={learnLLMChapters} />,
     );
 
-    expect(view.textContent).toContain("已完成 0 / 24 章");
+    expect(view.textContent).toContain("已完成 0 / 32 章");
 
     clickButtonByText(view, "标记本章完成");
 
     expect(view.textContent).toContain("本章已完成");
-    expect(view.textContent).toContain("已完成 1 / 24 章");
+    expect(view.textContent).toContain("已完成 1 / 32 章");
   });
 
   it("keeps chapter completion interactive when localStorage is unavailable", () => {
@@ -134,16 +141,48 @@ describe("course client interactions", () => {
         <ChapterCompletion chapter={learnLLMChapters[0]} chapters={learnLLMChapters} />,
       );
 
-      expect(view.textContent).toContain("已完成 0 / 24 章");
+      expect(view.textContent).toContain("已完成 0 / 32 章");
 
       clickButtonByText(view, "标记本章完成");
 
       expect(view.textContent).toContain("本章已完成");
-      expect(view.textContent).toContain("已完成 1 / 24 章");
+      expect(view.textContent).toContain("已完成 1 / 32 章");
     } finally {
       if (originalLocalStorage) {
         Object.defineProperty(window, "localStorage", originalLocalStorage);
       }
+    }
+  });
+
+  it("visualizes context window capacity as competing content segments", () => {
+    const view = render(<ContextWindowMeter />);
+
+    for (const label of ["系统指令", "历史对话", "外部资料", "当前问题", "回答空间"]) {
+      expect(view.textContent).toContain(label);
+    }
+  });
+
+  it("lets readers compare token cost across realistic scenarios", () => {
+    const view = render(<TokenCostCalculator />);
+
+    for (const label of ["短问答", "长文总结", "多轮对话", "带资料问答"]) {
+      expect(view.textContent).toContain(label);
+    }
+  });
+
+  it("shows the RAG pipeline from question to cited answer", () => {
+    const view = render(<RAGSimulator />);
+
+    for (const label of ["用户问题", "检索资料", "挑选片段", "生成回答", "标出依据"]) {
+      expect(view.textContent).toContain(label);
+    }
+  });
+
+  it("compares model choices by reader priorities", () => {
+    const view = render(<ModelLandscape />);
+
+    for (const label of ["隐私", "成本", "部署能力", "稳定性", "前沿能力"]) {
+      expect(view.textContent).toContain(label);
     }
   });
 });
