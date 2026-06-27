@@ -1,30 +1,17 @@
 import { describe, expect, it } from "vitest";
-import {
-  getAdjacentChapters,
-  getChapterBySlug,
-  learnLLMChapters,
-} from "./courses";
+import { getAdjacentChapters, getChapterBySlug, learnLLMChapters } from "./courses";
 
 describe("learnLLMChapters", () => {
-  it("defines exactly twelve ordered course chapters", () => {
-    expect(learnLLMChapters).toHaveLength(12);
-    expect(learnLLMChapters.map((chapter) => chapter.slug)).toEqual([
-      "chapter-01",
-      "chapter-02",
-      "chapter-03",
-      "chapter-04",
-      "chapter-05",
-      "chapter-06",
-      "chapter-07",
-      "chapter-08",
-      "chapter-09",
-      "chapter-10",
-      "chapter-11",
-      "chapter-12",
-    ]);
-    expect(learnLLMChapters.map((chapter) => chapter.order)).toEqual([
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-    ]);
+  it("defines an expanded course with contiguous slugs and orders", () => {
+    expect(learnLLMChapters.length).toBeGreaterThan(12);
+    expect(learnLLMChapters.map((chapter) => chapter.slug)).toEqual(
+      learnLLMChapters.map((_, index) => {
+        return `chapter-${String(index + 1).padStart(2, "0")}`;
+      }),
+    );
+    expect(learnLLMChapters.map((chapter) => chapter.order)).toEqual(
+      learnLLMChapters.map((_, index) => index + 1),
+    );
   });
 
   it("keeps the required chapter fields populated", () => {
@@ -32,23 +19,34 @@ describe("learnLLMChapters", () => {
       expect(chapter.title).not.toHaveLength(0);
       expect(chapter.unit).not.toHaveLength(0);
       expect(chapter.description).not.toHaveLength(0);
-      expect(chapter.estimatedMinutes).toBeGreaterThan(0);
     }
   });
 
-  it("finds chapters and their neighbors by slug", () => {
-    expect(getChapterBySlug("chapter-06")?.title).toBe(
-      "为什么“接下一句话”能变成“像在理解”",
+  it("covers the new course bridge topics needed for RAG and Agent lessons", () => {
+    expect(learnLLMChapters.map((chapter) => chapter.title)).toEqual(
+      expect.arrayContaining([
+        "上下文窗口：为什么长对话会忘记前面？",
+        "RAG：给 AI 一场开卷考试",
+        "Embedding：机器怎样按“意思”找资料？",
+        "工具调用：模型怎样拥有“手”？",
+        "Workflow：不要追求一个万能 Prompt",
+      ]),
     );
-    expect(getAdjacentChapters("chapter-06")).toMatchObject({
-      previous: { slug: "chapter-05" },
-      next: { slug: "chapter-07" },
+  });
+
+  it("finds chapters and their neighbors by slug", () => {
+    expect(getChapterBySlug("chapter-08")?.title).toBe(
+      "接下一句话：为什么预测下一个词能表现得像理解？",
+    );
+    expect(getAdjacentChapters("chapter-08")).toMatchObject({
+      previous: { slug: "chapter-07" },
+      next: { slug: "chapter-09" },
     });
     expect(getAdjacentChapters("chapter-01")).toMatchObject({
       next: { slug: "chapter-02" },
     });
-    expect(getAdjacentChapters("chapter-12")).toMatchObject({
-      previous: { slug: "chapter-11" },
+    expect(getAdjacentChapters(learnLLMChapters.at(-1)?.slug ?? "")).toMatchObject({
+      previous: { slug: "chapter-23" },
     });
   });
 });

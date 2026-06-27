@@ -22,37 +22,31 @@ type CourseCatalogProps = {
 };
 
 function groupByUnit(chapters: CourseChapter[]) {
-  return chapters.reduce<Array<{ unit: string; chapters: CourseChapter[] }>>(
-    (groups, chapter) => {
-      const lastGroup = groups.at(-1);
+  return chapters.reduce<Array<{ unit: string; chapters: CourseChapter[] }>>((groups, chapter) => {
+    const lastGroup = groups.at(-1);
 
-      if (lastGroup?.unit === chapter.unit) {
-        lastGroup.chapters.push(chapter);
-        return groups;
-      }
-
-      groups.push({ unit: chapter.unit, chapters: [chapter] });
+    if (lastGroup?.unit === chapter.unit) {
+      lastGroup.chapters.push(chapter);
       return groups;
-    },
-    [],
-  );
+    }
+
+    groups.push({ unit: chapter.unit, chapters: [chapter] });
+    return groups;
+  }, []);
 }
 
 export function CourseCatalog({ chapters }: CourseCatalogProps) {
   const { completedSet } = useCourseProgress();
-  const completedCount = chapters.filter((chapter) =>
-    completedSet.has(chapter.slug),
-  ).length;
+  const completedCount = chapters.filter((chapter) => completedSet.has(chapter.slug)).length;
   const progressValue = chapters.length > 0 ? (completedCount / chapters.length) * 100 : 0;
-  const nextChapter =
-    chapters.find((chapter) => !completedSet.has(chapter.slug)) ?? chapters[0];
+  const nextChapter = chapters.find((chapter) => !completedSet.has(chapter.slug)) ?? chapters[0];
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="rounded-xl border bg-card p-5 shadow-sm">
+      <section className="bg-card rounded-xl border p-5 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium text-muted-foreground">学习进度</p>
+            <p className="text-muted-foreground text-sm font-medium">学习进度</p>
             <h2 className="text-2xl font-semibold tracking-normal">
               已完成 {completedCount} / {chapters.length} 章
             </h2>
@@ -70,7 +64,7 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
       {groupByUnit(chapters).map((group) => (
         <section key={group.unit} className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <div className="size-2 rounded-full bg-primary" />
+            <div className="bg-primary size-2 rounded-full" />
             <h2 className="text-xl font-semibold tracking-normal">{group.unit}</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
@@ -84,7 +78,7 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
                       <Badge variant={completed ? "default" : "muted"}>
                         {String(chapter.order).padStart(2, "0")}
                       </Badge>
-                      <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+                      <span className="text-muted-foreground inline-flex items-center gap-1 text-sm">
                         {completed ? (
                           <CheckCircle2 data-icon="inline-start" className="size-4" />
                         ) : (
@@ -96,11 +90,6 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
                     <CardTitle>{chapter.title}</CardTitle>
                     <CardDescription>{chapter.description}</CardDescription>
                   </CardHeader>
-                  <CardContent className="mt-auto">
-                    <p className="text-sm text-muted-foreground">
-                      预计 {chapter.estimatedMinutes} 分钟
-                    </p>
-                  </CardContent>
                   <CardFooter>
                     <Button asChild variant={completed ? "outline" : "default"}>
                       <Link href={`/courses/learn-llm/${chapter.slug}`}>

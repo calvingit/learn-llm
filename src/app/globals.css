@@ -88,3 +88,128 @@ select {
 ::selection {
   background: color-mix(in srgb, var(--secondary) 45%, transparent);
 }
+
+[data-ai-map] [data-ai-layer-detail] {
+  display: none;
+}
+
+[data-ai-map]:has(input[value="ai"]:checked) [data-ai-layer-detail="ai"],
+[data-ai-map]:has(input[value="machine-learning"]:checked)
+  [data-ai-layer-detail="machine-learning"],
+[data-ai-map]:has(input[value="deep-learning"]:checked)
+  [data-ai-layer-detail="deep-learning"],
+[data-ai-map]:has(input[value="large-model"]:checked)
+  [data-ai-layer-detail="large-model"] {
+  display: block;
+}
+
+[data-ai-map] [data-ai-ring-label],
+[data-ai-map] [data-ai-ring-visual] {
+  border-color: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+[data-ai-map]:has(input[value="ai"]:checked) [data-ai-ring-label="ai"],
+[data-ai-map]:has(input[value="machine-learning"]:checked)
+  [data-ai-ring-label="machine-learning"],
+[data-ai-map]:has(input[value="deep-learning"]:checked)
+  [data-ai-ring-label="deep-learning"],
+[data-ai-map]:has(input[value="large-model"]:checked)
+  [data-ai-ring-label="large-model"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+[data-ai-map]:has(input[value="ai"]:checked) [data-ai-ring-visual="ai"],
+[data-ai-map]:has(input[value="machine-learning"]:checked)
+  [data-ai-ring-visual="machine-learning"],
+[data-ai-map]:has(input[value="deep-learning"]:checked)
+  [data-ai-ring-visual="deep-learning"],
+[data-ai-map]:has(input[value="large-model"]:checked)
+  [data-ai-ring-visual="large-model"] {
+  background: color-mix(in srgb, var(--primary) 18%, white);
+  border-color: var(--primary);
+}
+
+[data-ai-map]:has(input[value="ai"]:checked) [data-ai-option-label="ai"],
+[data-ai-map]:has(input[value="machine-learning"]:checked)
+  [data-ai-option-label="machine-learning"],
+[data-ai-map]:has(input[value="deep-learning"]:checked)
+  [data-ai-option-label="deep-learning"],
+[data-ai-map]:has(input[value="large-model"]:checked)
+  [data-ai-option-label="large-model"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+[data-learning-examples] [data-learning-action],
+[data-learning-examples] [data-learning-label-visible] {
+  display: none;
+}
+
+[data-learning-examples]:has(input[value="1"]:checked)
+  [data-learning-action="2"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-action="3"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-action="1"] {
+  display: inline-flex;
+}
+
+[data-learning-examples]:has(input[value="1"]:checked)
+  [data-learning-example="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-example="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-example="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-example="1"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-example="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-example="3"] {
+  background: var(--card);
+  opacity: 1;
+}
+
+[data-learning-examples]:has(input[value="1"]:checked)
+  [data-learning-label-visible="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-label-visible="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-label-visible="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-visible="1"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-visible="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-visible="3"] {
+  display: inline;
+}
+
+[data-learning-examples]:has(input[value="1"]:checked)
+  [data-learning-label-pending="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-label-pending="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-label-pending="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-pending="1"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-pending="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-label-pending="3"] {
+  display: none;
+}
+
+[data-learning-examples]:has(input[value="1"]:checked)
+  [data-learning-step-label="1"],
+[data-learning-examples]:has(input[value="2"]:checked)
+  [data-learning-step-label="2"],
+[data-learning-examples]:has(input[value="3"]:checked)
+  [data-learning-step-label="3"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}

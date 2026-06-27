@@ -46,9 +46,11 @@ const courseValues = [
 
 const learningPath = [
   "AI 是怎么发展来的",
-  "大模型为什么像会思考",
-  "Agent 为什么能做事",
-  "普通人如何使用它",
+  "大模型怎样生成文字",
+  "为什么会推理也会幻觉",
+  "怎样让回答更可靠",
+  "从 Prompt 到 Agent",
+  "普通人如何协作",
 ];
 
 const audiences = ["普通用户", "学生", "职场人士", "产品/运营/管理者", "非 AI 工程师"];
@@ -101,7 +103,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="rounded-xl border bg-card p-4 shadow-sm">
-            <div className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-4">
+            <div className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-3">
               {learningPath.map((item, index) => (
                 <div key={item} className="flex items-center gap-2">
                   <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
@@ -148,7 +150,7 @@ export default function HomePage() {
           <div>
             <h2 className="text-3xl font-semibold tracking-normal">学习路径</h2>
             <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-              12 章分成 4 个单元，从 AI 的发展讲到 Agent，再回到普通人的使用边界。
+              21 章分成 6 个单元，从 AI 的发展讲到 RAG、Agent，再回到普通人的工作流和使用边界。
             </p>
           </div>
           <Button asChild variant="outline">
@@ -158,7 +160,7 @@ export default function HomePage() {
             </Link>
           </Button>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
           {learningPath.map((item, index) => (
             <Card key={item} className="border-l-4 border-l-primary">
               <CardHeader>

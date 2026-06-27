@@ -8,7 +8,7 @@ import { learnLLMChapters } from "@/lib/courses";
 
 export const metadata: Metadata = {
   title: "课程目录",
-  description: "Learn-LLM 12 章课程目录。",
+  description: "Learn-LLM 21 章交互式课程目录。",
 };
 
 export default function LearnLLMCoursePage() {
@@ -26,7 +26,7 @@ export default function LearnLLMCoursePage() {
             Learn-LLM 课程目录
           </h1>
           <p className="max-w-3xl text-lg leading-8 text-muted-foreground">
-            12 章、4 个单元，从“AI 到底是什么”讲到“普通人怎么正确使用大模型”。每章都围绕一个问题展开，保持短、清楚、可互动。
+            21 章、6 个单元，从“AI 到底是什么”讲到 RAG、Agent 和日常工作流。每章都围绕一个问题展开，保持短、清楚、可互动。
           </p>
         </section>
         <section className="mt-10">
