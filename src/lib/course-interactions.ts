@@ -1,11 +1,16 @@
 type TokenCostInput = {
   inputTokens: number;
+  inputCacheHitTokens?: number;
+  inputCacheHitPricePerMillion?: number;
+  inputCacheMissPricePerMillion?: number;
   outputTokens: number;
-  inputPricePerMillion: number;
+  inputPricePerMillion?: number;
   outputPricePerMillion: number;
 };
 
 type TokenCostEstimate = {
+  cacheHitCost: number;
+  cacheMissCost: number;
   inputCost: number;
   outputCost: number;
   totalCost: number;
@@ -23,14 +28,25 @@ export function splitTextForTokenDemo(text: string) {
 
 export function estimateTokenCost({
   inputTokens,
+  inputCacheHitTokens = 0,
+  inputCacheHitPricePerMillion,
+  inputCacheMissPricePerMillion,
   outputTokens,
   inputPricePerMillion,
   outputPricePerMillion,
 }: TokenCostInput): TokenCostEstimate {
-  const inputCost = (inputTokens / 1_000_000) * inputPricePerMillion;
+  const cacheHitTokens = Math.min(Math.max(inputCacheHitTokens, 0), inputTokens);
+  const cacheMissTokens = inputTokens - cacheHitTokens;
+  const cacheHitPrice = inputCacheHitPricePerMillion ?? inputPricePerMillion ?? 0;
+  const cacheMissPrice = inputCacheMissPricePerMillion ?? inputPricePerMillion ?? 0;
+  const cacheHitCost = (cacheHitTokens / 1_000_000) * cacheHitPrice;
+  const cacheMissCost = (cacheMissTokens / 1_000_000) * cacheMissPrice;
+  const inputCost = cacheHitCost + cacheMissCost;
   const outputCost = (outputTokens / 1_000_000) * outputPricePerMillion;
 
   return {
+    cacheHitCost: roundCost(cacheHitCost),
+    cacheMissCost: roundCost(cacheMissCost),
     inputCost: roundCost(inputCost),
     outputCost: roundCost(outputCost),
     totalCost: roundCost(inputCost + outputCost),

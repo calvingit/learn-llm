@@ -183,84 +183,83 @@ const learningExamples = [
 
 const learningRevealSteps = [1, 2, 3] as const;
 
+const learningInsights = [
+  {
+    stage: "初始假设",
+    summary: "只看到一个垃圾样本，机器只能形成很粗的猜测。",
+    clues: ["陌生来源", "限时中奖"],
+    rule: "标题像促销、来源陌生时，需要提高警惕，但证据还不稳。",
+  },
+  {
+    stage: "开始对照正负样本",
+    summary: "加入一封正常邮件后，机器开始比较“可疑”和“可信”的差别。",
+    clues: ["陌生来源", "可信域名", "会议上下文"],
+    rule: "同样是邮件，发件人关系和业务上下文会改变判断。",
+  },
+  {
+    stage: "规律更稳定",
+    summary: "第三个样本强化了强迫点击和奖励诱导这类共同线索。",
+    clues: ["陌生来源", "强迫点击", "奖励诱导", "可信上下文"],
+    rule: "机器不是背某一句话，而是在多个样本中抽出可复用的判断线索。",
+  },
+];
+
 export function LearningByExamples() {
+  const [visibleCount, setVisibleCount] = useState(1);
+  const visibleExamples = learningExamples.slice(0, visibleCount);
+  const insight = learningInsights[visibleCount - 1];
+
   return (
     <WidgetShell
       title="从例子里学规律"
       description="逐条揭示训练样本，观察机器学习和手写规则的区别。"
     >
       <div data-learning-examples className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-        <fieldset className="grid gap-3">
-          <legend className="sr-only">选择训练样本数量</legend>
-          {learningRevealSteps.map((step) => (
-            <input
-              key={step}
-              className="sr-only"
-              defaultChecked={step === 1}
-              id={`learning-example-step-${step}`}
-              name="learning-example-step"
-              type="radio"
-              value={String(step)}
-            />
-          ))}
-          {learningExamples.map((example, index) => (
+        <div className="grid gap-3">
+          {visibleExamples.map((example, index) => (
             <div
               key={example.input}
               data-learning-example={index + 1}
-              className="bg-muted rounded-lg border p-4 opacity-45 transition-opacity"
+              className="bg-card rounded-lg border p-4 transition-colors"
             >
               <p className="my-0 text-sm leading-6">{example.input}</p>
-              <p className="text-primary mt-2 mb-0 text-sm font-semibold">
-                <span data-learning-label-visible={index + 1}>{example.label}</span>
-                <span data-learning-label-pending={index + 1}>等待样本</span>
-              </p>
+              <p className="text-primary mt-2 mb-0 text-sm font-semibold">{example.label}</p>
             </div>
           ))}
-          <label
-            aria-label="显示 2 个训练样本"
-            data-learning-action="2"
-            htmlFor="learning-example-step-2"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow transition-colors"
+          <Button
+            type="button"
+            onClick={() =>
+              setVisibleCount((count) =>
+                count >= learningRevealSteps.length
+                  ? 1
+                  : Math.min(count + 1, learningRevealSteps.length),
+              )
+            }
           >
-            加一个样本
-            <ArrowRight data-icon="inline-end" />
-          </label>
-          <label
-            aria-label="显示 3 个训练样本"
-            data-learning-action="3"
-            htmlFor="learning-example-step-3"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow transition-colors"
-          >
-            加一个样本
-            <ArrowRight data-icon="inline-end" />
-          </label>
-          <label
-            aria-label="重置为 1 个训练样本"
-            data-learning-action="1"
-            htmlFor="learning-example-step-1"
-            className="bg-card hover:bg-muted inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium shadow-sm transition-colors"
-          >
-            重置样本
-            <RefreshCcw data-icon="inline-end" />
-          </label>
-          <div className="grid grid-cols-3 gap-2" aria-label="训练样本数量快捷选择">
-            {learningRevealSteps.map((step) => (
-              <label
-                key={step}
-                data-learning-step-label={step}
-                htmlFor={`learning-example-step-${step}`}
-                className="bg-card hover:bg-muted cursor-pointer rounded-md border px-3 py-2 text-center text-sm font-semibold transition-colors"
-              >
-                {step} 个样本
-              </label>
-            ))}
-          </div>
-        </fieldset>
+            {visibleCount >= learningRevealSteps.length ? "重置样本" : "加一个样本"}
+            {visibleCount >= learningRevealSteps.length ? (
+              <RefreshCcw data-icon="inline-end" />
+            ) : (
+              <ArrowRight data-icon="inline-end" />
+            )}
+          </Button>
+        </div>
         <div className="bg-muted rounded-xl p-5">
           <h4 className="mt-0 text-base font-semibold">机器正在归纳</h4>
-          <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">
-            它不是记住某一句邮件，而是在样本之间找共同线索：陌生来源、强迫点击、
-            奖励诱导、可信上下文。样本越多，规律越稳定。
+          <p className="text-primary mt-3 mb-0 text-sm font-semibold">{insight.stage}</p>
+          <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{insight.summary}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {insight.clues.map((clue) => (
+              <span
+                key={clue}
+                className="bg-card text-primary rounded-full border px-3 py-1 text-xs font-semibold"
+              >
+                {clue}
+              </span>
+            ))}
+          </div>
+          <p className="bg-card mt-4 mb-0 rounded-lg border p-3 text-sm leading-6">
+            当前规则：{insight.rule}
           </p>
         </div>
       </div>
@@ -532,40 +531,72 @@ const tokenCostScenarios = {
     label: "短问答",
     inputTokens: 600,
     outputTokens: 300,
+    cacheHitPercent: 10,
     note: "日常问答通常便宜，主要成本来自本轮输入和回答。",
   },
   summary: {
     label: "长文总结",
     inputTokens: 12000,
     outputTokens: 1200,
+    cacheHitPercent: 20,
     note: "长文一次性塞入上下文，输入成本会明显上升。",
   },
   chat: {
     label: "多轮对话",
     inputTokens: 6500,
     outputTokens: 900,
+    cacheHitPercent: 45,
     note: "历史对话会反复进入上下文，越聊越占账本。",
   },
   rag: {
     label: "带资料问答",
     inputTokens: 9800,
     outputTokens: 1100,
+    cacheHitPercent: 35,
     note: "检索片段也算输入 Token，RAG 不是免费魔法。",
   },
 };
 
+const deepSeekPricing = {
+  flash: {
+    label: "DeepSeek V4 Flash",
+    cacheHitInputPrice: 0.02,
+    cacheMissInputPrice: 1,
+    outputPrice: 2,
+  },
+  pro: {
+    label: "DeepSeek V4 Pro",
+    cacheHitInputPrice: 0.025,
+    cacheMissInputPrice: 3,
+    outputPrice: 6,
+  },
+} as const;
+
+function formatCny(value: number) {
+  return `¥${value.toFixed(6)}`;
+}
+
 export function TokenCostCalculator() {
   const [scenarioKey, setScenarioKey] = useState<keyof typeof tokenCostScenarios>("summary");
+  const [modelKey, setModelKey] = useState<keyof typeof deepSeekPricing>("flash");
   const [customInputTokens, setCustomInputTokens] = useState(2000);
   const [customOutputTokens, setCustomOutputTokens] = useState(800);
+  const [cacheHitPercent, setCacheHitPercent] = useState(
+    tokenCostScenarios.summary.cacheHitPercent,
+  );
   const scenario = tokenCostScenarios[scenarioKey];
+  const model = deepSeekPricing[modelKey];
   const inputTokens = Math.max(scenario.inputTokens, customInputTokens);
   const outputTokens = Math.max(scenario.outputTokens, customOutputTokens);
+  const cacheHitTokens = Math.round(inputTokens * (cacheHitPercent / 100));
+  const cacheMissTokens = inputTokens - cacheHitTokens;
   const estimate = estimateTokenCost({
     inputTokens,
+    inputCacheHitTokens: cacheHitTokens,
     outputTokens,
-    inputPricePerMillion: 2,
-    outputPricePerMillion: 8,
+    inputCacheHitPricePerMillion: model.cacheHitInputPrice,
+    inputCacheMissPricePerMillion: model.cacheMissInputPrice,
+    outputPricePerMillion: model.outputPrice,
   });
 
   return (
@@ -582,7 +613,10 @@ export function TokenCostCalculator() {
               "rounded-lg border p-4 text-left transition-colors",
               scenarioKey === key ? "border-primary bg-primary/8" : "bg-card hover:bg-muted",
             )}
-            onClick={() => setScenarioKey(key as keyof typeof tokenCostScenarios)}
+            onClick={() => {
+              setScenarioKey(key as keyof typeof tokenCostScenarios);
+              setCacheHitPercent(item.cacheHitPercent);
+            }}
           >
             <span className="text-sm font-semibold">{item.label}</span>
             <span className="text-muted-foreground mt-2 block text-xs leading-5">
@@ -591,9 +625,28 @@ export function TokenCostCalculator() {
           </button>
         ))}
       </div>
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="mt-5 grid gap-3 md:grid-cols-2">
+        {Object.entries(deepSeekPricing).map(([key, item]) => (
+          <button
+            key={key}
+            type="button"
+            className={cn(
+              "rounded-lg border p-4 text-left transition-colors",
+              modelKey === key ? "border-primary bg-primary/8" : "bg-card hover:bg-muted",
+            )}
+            onClick={() => setModelKey(key as keyof typeof deepSeekPricing)}
+          >
+            <span className="text-sm font-semibold">{item.label}</span>
+            <span className="text-muted-foreground mt-2 block text-xs leading-5">
+              缓存命中输入 ¥{item.cacheHitInputPrice}/百万，缓存未命中输入 ¥
+              {item.cacheMissInputPrice}/百万，输出价格 ¥{item.outputPrice}/百万
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="mt-5 grid gap-5 md:grid-cols-3">
         <label className="bg-card rounded-lg border p-4">
-          <span className="text-sm font-semibold">输入 Token：{inputTokens}</span>
+          <span className="text-sm font-semibold">输入 Token：{inputTokens.toLocaleString()}</span>
           <input
             className="accent-primary mt-4 w-full"
             type="range"
@@ -605,7 +658,7 @@ export function TokenCostCalculator() {
           />
         </label>
         <label className="bg-card rounded-lg border p-4">
-          <span className="text-sm font-semibold">输出 Token：{outputTokens}</span>
+          <span className="text-sm font-semibold">输出 Token：{outputTokens.toLocaleString()}</span>
           <input
             className="accent-primary mt-4 w-full"
             type="range"
@@ -616,14 +669,33 @@ export function TokenCostCalculator() {
             onChange={(event) => setCustomOutputTokens(Number(event.target.value))}
           />
         </label>
+        <label className="bg-card rounded-lg border p-4">
+          <span className="text-sm font-semibold">缓存命中：{cacheHitPercent}%</span>
+          <input
+            className="accent-primary mt-4 w-full"
+            type="range"
+            min="0"
+            max="90"
+            step="5"
+            value={cacheHitPercent}
+            onChange={(event) => setCacheHitPercent(Number(event.target.value))}
+          />
+        </label>
       </div>
       <p className="bg-card mt-4 mb-0 rounded-lg border p-4 text-sm leading-6">
-        当前场景：<span className="font-semibold">{scenario.label}</span>。{scenario.note}
+        当前场景：<span className="font-semibold">{scenario.label}</span>，按{" "}
+        <span className="font-semibold">{model.label}</span> 人民币价格模拟。{scenario.note}
       </p>
-      <div className="bg-muted mt-5 grid gap-3 rounded-xl p-5 sm:grid-cols-3">
-        <p className="my-0 text-sm">输入费用：${estimate.inputCost.toFixed(6)}</p>
-        <p className="my-0 text-sm">输出费用：${estimate.outputCost.toFixed(6)}</p>
-        <p className="my-0 text-sm font-semibold">合计：${estimate.totalCost.toFixed(6)}</p>
+      <div className="bg-muted mt-5 grid gap-3 rounded-xl p-5 sm:grid-cols-2 lg:grid-cols-4">
+        <p className="my-0 text-sm">
+          缓存命中输入：{cacheHitTokens.toLocaleString()} Token，{formatCny(estimate.cacheHitCost)}
+        </p>
+        <p className="my-0 text-sm">
+          缓存未命中输入：{cacheMissTokens.toLocaleString()} Token，
+          {formatCny(estimate.cacheMissCost)}
+        </p>
+        <p className="my-0 text-sm">输出费用：{formatCny(estimate.outputCost)}</p>
+        <p className="my-0 text-sm font-semibold">合计：{formatCny(estimate.totalCost)}</p>
       </div>
     </WidgetShell>
   );
@@ -791,18 +863,13 @@ const cotSteps = [
 
 export function CotStepByStep() {
   const [step, setStep] = useState(1);
+  const visibleSteps = cotSteps.slice(0, step);
 
   return (
     <WidgetShell title="可检查的推理步骤" description="逐步展开中间过程，让答案更容易被人类复核。">
       <div className="grid gap-3">
-        {cotSteps.map((item, index) => (
-          <div
-            key={item}
-            className={cn(
-              "rounded-lg border p-4 text-sm leading-6",
-              index < step ? "bg-card" : "bg-muted text-muted-foreground opacity-55",
-            )}
-          >
+        {visibleSteps.map((item, index) => (
+          <div key={item} className="bg-card rounded-lg border p-4 text-sm leading-6">
             {index + 1}. {item}
           </div>
         ))}
@@ -891,13 +958,18 @@ export function HallucinationDetector() {
 
 export function RAGSimulator() {
   const [ragEnabled, setRagEnabled] = useState(true);
-  const pipeline = [
-    { label: "用户问题", detail: "请假需要提前几天申请？" },
-    { label: "检索资料", detail: "从企业知识库找制度片段。" },
-    { label: "挑选片段", detail: "选择与请假流程最相关的原文。" },
-    { label: "生成回答", detail: "把资料转成自然语言答案。" },
-    { label: "标出依据", detail: "提醒用户回到原文确认适用范围。" },
-  ];
+  const pipeline = ragEnabled
+    ? [
+        { label: "用户问题", detail: "请假需要提前几天申请？" },
+        { label: "检索资料", detail: "从企业知识库找制度片段。" },
+        { label: "挑选片段", detail: "选择与请假流程最相关的原文。" },
+        { label: "生成回答", detail: "把资料转成自然语言答案。" },
+        { label: "标出依据", detail: "提醒用户回到原文确认适用范围。" },
+      ]
+    : [
+        { label: "用户问题", detail: "请假需要提前几天申请？" },
+        { label: "凭已有记忆回答", detail: "没有企业制度原文，只能给通用经验判断。" },
+      ];
 
   return (
     <WidgetShell
@@ -920,7 +992,7 @@ export function RAGSimulator() {
           关闭 RAG
         </Button>
       </div>
-      <div className="mt-5 grid gap-3 md:grid-cols-5">
+      <div className={cn("mt-5 grid gap-3", ragEnabled ? "md:grid-cols-5" : "md:grid-cols-2")}>
         {pipeline.map((step, index) => (
           <div key={step.label} className="bg-card rounded-lg border p-3">
             <p className="text-primary my-0 text-sm font-semibold">
@@ -934,10 +1006,12 @@ export function RAGSimulator() {
         <div className="bg-card rounded-xl border p-5">
           <p className="my-0 flex items-center gap-2 font-semibold">
             <Database className="text-primary size-4" />
-            企业知识库
+            {ragEnabled ? "企业知识库" : "未提供资料"}
           </p>
           <p className="text-muted-foreground mt-3 mb-0 text-sm leading-6">
-            根据 2026 年内部门户说明，请假需提前 2 天提交申请，直属主管审批后同步到考勤系统。
+            {ragEnabled
+              ? "根据 2026 年内部门户说明，请假需提前 2 天提交申请，直属主管审批后同步到考勤系统。"
+              : "关闭 RAG 后，模型没有拿到企业制度原文，不能声称自己查到了内部规定。"}
           </p>
         </div>
         <div className="bg-muted rounded-xl p-5">
@@ -960,9 +1034,31 @@ const embeddingDocs = [
   { title: "服务器告警", x: 28, y: 22, topic: "技术", sample: "监控、故障、恢复" },
 ];
 
+const embeddingLabelOffsets: Record<string, { label: string; x: number; y: number }> = {
+  请假制度: { label: "upper-left", x: -7, y: -8 },
+  年假余额: { label: "lower-right", x: 8, y: 8 },
+};
+
+function clampMapPosition(value: number) {
+  return Math.min(Math.max(value, 8), 92);
+}
+
 export function EmbeddingMap() {
   const [query, setQuery] = useState<"vacation" | "finance">("vacation");
-  const target = query === "vacation" ? { x: 70, y: 45 } : { x: 24, y: 62 };
+  const target =
+    query === "vacation"
+      ? { x: 70, y: 45, label: "休假怎么申请" }
+      : { x: 24, y: 62, label: "发票如何报销" };
+  const docsWithDistance = embeddingDocs.map((doc) => {
+    const distance = Math.hypot(doc.x - target.x, doc.y - target.y);
+
+    return {
+      ...doc,
+      distance,
+      labelOffset: distance < 11 ? embeddingLabelOffsets[doc.title] : undefined,
+      nearby: distance < 11,
+    };
+  });
 
   return (
     <WidgetShell
@@ -986,36 +1082,90 @@ export function EmbeddingMap() {
         </Button>
       </div>
       <div className="bg-muted relative mt-5 aspect-[16/9] overflow-hidden rounded-xl border">
-        <div className="absolute top-3 left-3 rounded-md bg-white/90 px-3 py-2 text-xs font-semibold">
-          查询点
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--border)_45%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--border)_45%,transparent)_1px,transparent_1px)] bg-[size:12.5%_20%]" />
+        <svg
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <circle
+            data-embedding-query-range
+            cx={target.x}
+            cy={target.y}
+            r="12"
+            className="fill-primary/5 stroke-primary/20"
+            strokeDasharray="2 2"
+            strokeWidth="0.45"
+          />
+          {docsWithDistance.map((doc) => (
+            <line
+              key={doc.title}
+              x1={target.x}
+              y1={target.y}
+              x2={doc.x}
+              y2={doc.y}
+              className={doc.nearby ? "stroke-primary/65" : "stroke-border/80"}
+              strokeDasharray={doc.nearby ? "0" : "2 2"}
+              strokeWidth={doc.nearby ? "0.8" : "0.45"}
+            />
+          ))}
+        </svg>
+        <div className="bg-card absolute top-3 left-3 rounded-md border px-3 py-2 text-xs font-semibold shadow-sm">
+          查询点：{target.label}
         </div>
-        <div
-          className="bg-primary ring-primary/20 absolute size-5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
-          style={{ left: `${target.x}%`, top: `${target.y}%` }}
-        />
-        {embeddingDocs.map((doc) => {
-          const nearby = Math.abs(doc.x - target.x) + Math.abs(doc.y - target.y) < 18;
+        {docsWithDistance.map((doc) => {
+          const labelX = clampMapPosition(doc.x + (doc.labelOffset?.x ?? 0));
+          const labelY = clampMapPosition(doc.y + (doc.labelOffset?.y ?? 0));
 
           return (
-            <div
-              key={doc.title}
-              className={cn(
-                "bg-card absolute -translate-x-1/2 -translate-y-1/2 rounded-md border px-3 py-2 text-xs shadow-sm",
-                nearby && "border-primary text-primary",
-              )}
-              style={{ left: `${doc.x}%`, top: `${doc.y}%` }}
-            >
-              {doc.title}
+            <div key={doc.title}>
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full border",
+                  doc.nearby ? "bg-primary border-primary" : "bg-card border-primary/35",
+                )}
+                style={{ left: `${doc.x}%`, top: `${doc.y}%` }}
+              />
+              <div
+                data-embedding-label-offset={doc.labelOffset?.label ?? "center"}
+                data-embedding-map-label
+                data-embedding-nearby={doc.nearby ? "true" : "false"}
+                className={cn(
+                  "bg-card absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-md border px-3 py-2 text-xs whitespace-nowrap shadow-sm transition-colors",
+                  doc.nearby &&
+                    "border-primary bg-primary/8 text-primary ring-primary/15 shadow-md ring-2",
+                )}
+                style={{ left: `${labelX}%`, top: `${labelY}%` }}
+              >
+                <span className="font-semibold">{doc.title}</span>
+                {doc.nearby ? (
+                  <span className="bg-primary/12 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold">
+                    高相关
+                  </span>
+                ) : null}
+              </div>
             </div>
           );
         })}
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-4">
-        {embeddingDocs.map((doc) => (
-          <div key={doc.title} className="bg-card rounded-lg border p-3 text-sm">
+        {docsWithDistance.map((doc) => (
+          <div
+            key={doc.title}
+            data-embedding-nearby={doc.nearby ? "true" : "false"}
+            className={cn(
+              "bg-card rounded-lg border p-3 text-sm",
+              doc.nearby && "border-primary bg-primary/8",
+            )}
+          >
             <p className="my-0 font-semibold">{doc.title}</p>
             <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">
               {doc.topic}：{doc.sample}
+            </p>
+            <p className="text-primary mt-2 mb-0 text-xs font-semibold">
+              {doc.nearby ? "高相关" : "低相关"} · 距离 {Math.round(doc.distance)}
             </p>
           </div>
         ))}
@@ -1149,38 +1299,88 @@ export function PromptSandbox() {
 }
 
 const toolSteps = [
-  { title: "模型决定下一步", detail: "需要查询今天北京天气，而不是凭记忆回答。", icon: Brain },
+  {
+    title: "模型决定下一步",
+    detail: "需要查询今天北京天气，而不是凭记忆回答。",
+    payload: "意图：查询北京天气",
+    actor: "模型",
+    target: "系统",
+    icon: Brain,
+  },
   {
     title: "系统匹配工具",
     detail: "把意图转换成 weather.search({ city: '北京' })。",
+    payload: "工具请求：weather.search",
+    actor: "系统",
+    target: "工具",
     icon: Wrench,
   },
-  { title: "工具负责执行", detail: "真实工具查询天气服务，返回结构化结果。", icon: Search },
-  { title: "观察结果回到模型", detail: "北京：多云，28 摄氏度，微风。", icon: Database },
-  { title: "模型组织回答", detail: "建议穿轻薄外套，并提醒带伞看实时预报。", icon: Hand },
+  {
+    title: "工具负责执行",
+    detail: "真实工具查询天气服务，返回结构化结果。",
+    payload: "结果：多云，28 摄氏度",
+    actor: "工具",
+    target: "系统",
+    icon: Search,
+  },
+  {
+    title: "观察结果回到模型",
+    detail: "北京：多云，28 摄氏度，微风。",
+    payload: "观察：天气结构化结果",
+    actor: "系统",
+    target: "模型",
+    icon: Database,
+  },
+  {
+    title: "模型组织回答",
+    detail: "建议穿轻薄外套，并提醒带伞看实时预报。",
+    payload: "最终回答",
+    actor: "模型",
+    target: "用户",
+    icon: Hand,
+  },
 ];
 
 export function ToolCallingStepper() {
   const [step, setStep] = useState(1);
+  const visibleSteps = toolSteps.slice(0, step);
+  const currentStep = visibleSteps[visibleSteps.length - 1];
 
   return (
     <WidgetShell
       title="工具调用分步器"
       description="模型不会亲自查天气，它输出意图，由系统调用真实工具。"
     >
-      <div className="grid gap-3">
-        {toolSteps.map((item, index) => {
-          const Icon = item.icon;
-          const active = index < step;
+      <div className="grid gap-3 md:grid-cols-3">
+        {["模型", "系统", "工具"].map((lane) => {
+          const involved = currentStep.actor === lane || currentStep.target === lane;
 
           return (
             <div
-              key={item.title}
+              key={lane}
               className={cn(
                 "rounded-lg border p-4 transition-colors",
-                active ? "bg-card" : "bg-muted text-muted-foreground",
+                involved ? "border-primary bg-primary/8" : "bg-card",
               )}
             >
+              <p className="my-0 text-sm font-semibold">{lane}</p>
+              <p className="text-muted-foreground mt-2 mb-0 text-xs leading-5">
+                {currentStep.actor === lane
+                  ? `发出：${currentStep.payload}`
+                  : currentStep.target === lane
+                    ? `接收：${currentStep.payload}`
+                    : "等待当前轮次数据"}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4 grid gap-3">
+        {visibleSteps.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div key={item.title} className="bg-card rounded-lg border p-4 transition-colors">
               <p className="my-0 flex items-center gap-2 font-semibold">
                 <Icon className="text-primary size-4" />
                 {item.title}
@@ -1212,17 +1412,20 @@ const agentSteps = [
 
 export function AgentWorkflowViewer() {
   const [step, setStep] = useState(0);
+  const visibleSteps = agentSteps.slice(0, step + 1);
+  const currentStep = agentSteps[step];
 
   return (
     <WidgetShell title="Agent 执行闭环" description="每点一次，推进一轮思考、行动、观察和再决策。">
+      <div className="bg-muted mb-4 rounded-xl border p-4">
+        <p className="text-primary my-0 text-sm font-semibold">当前阶段</p>
+        <p className="mt-2 mb-0 text-sm leading-6">{currentStep}</p>
+      </div>
       <div className="grid gap-3">
-        {agentSteps.map((item, index) => (
+        {visibleSteps.map((item, index) => (
           <div
             key={item}
-            className={cn(
-              "rounded-lg border p-4 text-sm leading-6",
-              index <= step ? "border-primary bg-primary/8" : "bg-card opacity-55",
-            )}
+            className="border-primary bg-primary/8 rounded-lg border p-4 text-sm leading-6"
           >
             {index + 1}. {item}
           </div>
@@ -1243,37 +1446,55 @@ export function AgentWorkflowViewer() {
   );
 }
 
-const debuggerFixes = [
-  "停止条件：限制同一工具最多连续调用 2 次",
-  "人类确认：高风险动作执行前必须等待用户确认",
-  "权限边界：工具不存在时说明失败，而不是编造结果",
-  "日志追踪：记录每次调用的输入、输出和原因",
-];
-
 const debuggerFailures = [
   {
     label: "目标漂移",
     detail: "原本只要查天气，执行中却开始规划整周行程。",
+    fixLabel: "目标边界",
+    fixDetail: "把目标限定为“查询今天北京天气并给出穿搭建议”，新目标必须回到用户确认。",
+    recovery: "Agent 会拒绝继续扩展到整周行程，只汇报天气和穿搭建议。",
+    runawayTrace: ["读取天气目标", "自行扩展成整周旅行规划", "继续搜索餐厅、路线和预算"],
+    repairedTrace: ["读取天气目标", "拦截：新目标超出用户原始请求", "只输出天气和穿搭建议"],
   },
   {
     label: "重复循环",
     detail: "反复调用搜索工具，却不判断答案是否已经足够。",
+    fixLabel: "停止条件",
+    fixDetail: "限制同一工具最多连续调用 2 次，并在拿到足够信息后进入总结。",
+    recovery: "第二次仍没有新增信息时，Agent 停止调用并说明信息不足。",
+    runawayTrace: ["调用搜索工具", "拿到相同摘要", "再次搜索同一个问题", "继续循环等待新结果"],
+    repairedTrace: ["调用搜索工具", "第二次结果无新增信息", "拦截：达到连续调用上限，转入总结"],
   },
   {
     label: "工具误用",
     detail: "把发邮件工具当作笔记工具，可能把草稿发出去。",
+    fixLabel: "工具权限",
+    fixDetail: "把工具分为只读、草稿和外部发送；发送类工具必须先获得人类确认。",
+    recovery: "Agent 只能创建草稿，不能直接把内容发给外部收件人。",
+    runawayTrace: ["整理会议要点", "误选发邮件工具", "把未确认草稿发送给外部收件人"],
+    repairedTrace: ["整理会议要点", "拦截：发送类工具需要人类确认", "只保存草稿并等待确认"],
   },
   {
     label: "伪造结果",
     detail: "工具失败后仍假装查到了结果。",
+    fixLabel: "权限边界",
+    fixDetail: "工具失败要如实返回失败状态；没有工具结果时不得编造天气、价格或审批结论。",
+    recovery: "Agent 会说明工具失败，并请求重试或人工查询，而不是继续生成假结果。",
+    runawayTrace: ["调用工具失败", "忽略失败状态", "继续编造一个看似成功的结论"],
+    repairedTrace: [
+      "调用工具失败",
+      "拦截：没有工具结果，不允许编造结论",
+      "向用户说明失败并建议重试",
+    ],
   },
 ];
 
 export function AgentDebugger() {
-  const [fixes, setFixes] = useState<string[]>([]);
   const [failureIndex, setFailureIndex] = useState(1);
-  const stable = fixes.length === debuggerFixes.length;
+  const [repairedFailures, setRepairedFailures] = useState<string[]>([]);
   const failure = debuggerFailures[failureIndex];
+  const repaired = repairedFailures.includes(failure.label);
+  const trace = repaired ? failure.repairedTrace : failure.runawayTrace;
 
   return (
     <WidgetShell title="Agent 调试台" description="给失控的 Agent 加边界，观察它如何从循环中恢复。">
@@ -1292,82 +1513,195 @@ export function AgentDebugger() {
           </button>
         ))}
       </div>
-      <div className="bg-muted rounded-xl border p-5">
+      <div data-agent-debugger-issue-panel className="bg-muted mt-4 rounded-xl border p-5">
         <p className="my-0 flex items-center gap-2 font-semibold">
           <AlertTriangle className="text-accent size-4" />
           当前问题：{failure.label}
         </p>
         <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{failure.detail}</p>
       </div>
-      <div className="mt-4 grid gap-3">
-        {debuggerFixes.map((fix) => {
-          const active = fixes.includes(fix);
-
-          return (
-            <button
-              key={fix}
-              type="button"
-              className={cn(
-                "rounded-lg border p-4 text-left text-sm transition-colors",
-                active ? "border-primary bg-primary/8" : "bg-card hover:bg-muted",
-              )}
-              onClick={() =>
-                setFixes((current) =>
-                  current.includes(fix)
-                    ? current.filter((item) => item !== fix)
-                    : [...current, fix],
-                )
-              }
-            >
-              {active ? "已启用： " : "启用： "}
-              {fix}
-            </button>
-          );
-        })}
+      <div className="mt-4 grid gap-3 md:grid-cols-[0.95fr_1.05fr]">
+        <div className="bg-card rounded-xl border p-5">
+          <p className="text-primary my-0 text-sm font-semibold">对应修复：{failure.fixLabel}</p>
+          <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{failure.fixDetail}</p>
+          <Button
+            className="mt-4"
+            type="button"
+            variant={repaired ? "outline" : "default"}
+            onClick={() =>
+              setRepairedFailures((current) =>
+                current.includes(failure.label)
+                  ? current.filter((item) => item !== failure.label)
+                  : [...current, failure.label],
+              )
+            }
+          >
+            {repaired ? "撤销修复" : "应用对应修复"}
+          </Button>
+        </div>
+        <div className="bg-muted rounded-xl border p-5">
+          <p className="my-0 text-sm font-semibold">恢复后行为</p>
+          <p className="text-muted-foreground mt-3 mb-0 text-sm leading-7">{failure.recovery}</p>
+        </div>
+      </div>
+      <div
+        data-agent-debugger-trace
+        className={cn(
+          "mt-4 rounded-xl border p-5",
+          repaired ? "border-primary bg-primary/8" : "bg-muted",
+        )}
+      >
+        <p className="my-0 flex items-center gap-2 text-sm font-semibold">
+          {repaired ? (
+            <CheckCircle2 className="text-primary size-4" />
+          ) : (
+            <AlertTriangle className="text-accent size-4" />
+          )}
+          {repaired ? "修复后执行轨迹" : "失控轨迹"}
+        </p>
+        <ol className="mt-4 mb-0 grid gap-2 pl-0">
+          {trace.map((item, index) => (
+            <li key={item} className="bg-card flex items-start gap-3 rounded-lg border p-3 text-sm">
+              <span
+                className={cn(
+                  "grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold",
+                  repaired ? "bg-primary text-white" : "bg-accent text-white",
+                )}
+              >
+                {index + 1}
+              </span>
+              <span className="leading-6">{item}</span>
+            </li>
+          ))}
+        </ol>
       </div>
       <p className="bg-card mt-4 mb-0 rounded-lg p-4 text-sm leading-6">
-        状态：{stable ? "边界完整，Agent 可以停止并汇报结果。" : "仍有失控风险。"}
+        状态：{repaired ? "当前修复已改变执行路径。" : "当前失控类型仍未加边界。"}
       </p>
     </WidgetShell>
   );
 }
 
 const workflowNodes = [
-  "收集原始材料",
-  "AI 生成初稿",
-  "人工审核结构",
-  "RAG 核对事实",
-  "AI 改写成最终稿",
+  {
+    title: "收集原始材料",
+    owner: "人类",
+    action: "整理访谈、产品资料和约束条件，决定哪些材料可以进入流程。",
+    output: "原始资料包",
+    risk: "材料缺失会让后续草稿看起来完整但事实空心。",
+    check: "来源、日期、负责人是否齐全",
+  },
+  {
+    title: "AI 生成初稿",
+    owner: "AI",
+    action: "把资料改写成结构化草稿，先追求可审阅，不直接发布。",
+    output: "带待核标记的初稿",
+    risk: "语言流畅容易掩盖事实缺口。",
+    check: "是否标出不确定段落",
+  },
+  {
+    title: "人工审核结构",
+    owner: "人类",
+    action: "检查结构、语气和关键信息是否符合目标读者。",
+    output: "结构确认稿",
+    risk: "如果跳过人工审核，错误方向会被后续步骤放大。",
+    check: "标题、顺序、关键信息是否合理",
+  },
+  {
+    title: "RAG 核对事实",
+    owner: "系统",
+    action: "把待核事实逐条回到资料库或原文中核对。",
+    output: "事实核对清单",
+    risk: "事实风险下降，但检索不到不代表事实不存在。",
+    check: "依据覆盖率",
+  },
+  {
+    title: "AI 改写成最终稿",
+    owner: "AI + 人类",
+    action: "让 AI 按已确认结构润色，最后由人确认发布。",
+    output: "可发布终稿",
+    risk: "最终表达仍可能引入新措辞，需要末轮检查。",
+    check: "新增表述是否仍有依据",
+  },
 ];
 
 export function WorkflowBuilder() {
   const [nodeCount, setNodeCount] = useState(3);
+  const [activeIndex, setActiveIndex] = useState(2);
   const nodes = workflowNodes.slice(0, nodeCount);
+  const active = nodes[Math.min(activeIndex, nodes.length - 1)];
+
+  function addStep() {
+    const nextCount = Math.min(nodeCount + 1, workflowNodes.length);
+    setNodeCount(nextCount);
+    setActiveIndex(nextCount - 1);
+  }
+
+  function resetWorkflow() {
+    setNodeCount(3);
+    setActiveIndex(2);
+  }
 
   return (
     <WidgetShell
       title="步骤式工作流构建器"
       description="先用步骤构建工作流，理解协作顺序，再考虑复杂画布。"
     >
-      <div className="grid gap-3">
-        {nodes.map((node, index) => (
-          <div key={node} className="bg-card flex items-center gap-3 rounded-lg border p-4">
-            <span className="bg-primary grid size-8 shrink-0 place-items-center rounded-full text-sm font-semibold text-white">
-              {index + 1}
-            </span>
-            <span className="text-sm font-medium">{node}</span>
+      <div className="bg-muted rounded-xl border p-4">
+        <p className="text-primary my-0 text-sm font-semibold">任务场景</p>
+        <p className="mt-2 mb-0 text-sm leading-6">
+          把一组客户访谈和产品资料整理成可发布说明，逐步决定哪些环节交给 AI、系统和人类。
+        </p>
+      </div>
+      <div className="mt-4 grid gap-4 md:grid-cols-[1fr_0.9fr]">
+        <div className="grid gap-3">
+          {nodes.map((node, index) => (
+            <button
+              key={node.title}
+              type="button"
+              className={cn(
+                "flex items-center gap-3 rounded-lg border p-4 text-left transition-colors",
+                active.title === node.title
+                  ? "border-primary bg-primary/8"
+                  : "bg-card hover:bg-muted",
+              )}
+              onClick={() => setActiveIndex(index)}
+            >
+              <span className="bg-primary grid size-8 shrink-0 place-items-center rounded-full text-sm font-semibold text-white">
+                {index + 1}
+              </span>
+              <span>
+                <span className="block text-sm font-semibold">{node.title}</span>
+                <span className="text-muted-foreground mt-1 block text-xs">责任：{node.owner}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div className="grid gap-3">
+          <div className="bg-card rounded-xl border p-4">
+            <p className="text-primary my-0 text-sm font-semibold">责任分工</p>
+            <p className="mt-2 mb-0 text-sm leading-6">
+              {active.owner}：{active.action}
+            </p>
           </div>
-        ))}
+          <div className="bg-card rounded-xl border p-4">
+            <p className="text-primary my-0 text-sm font-semibold">风险检查</p>
+            <p className="mt-2 mb-0 text-sm leading-6">{active.risk}</p>
+            <p className="bg-muted mt-3 mb-0 rounded-lg p-3 text-xs font-semibold">
+              检查点：{active.check}
+            </p>
+          </div>
+          <div className="bg-muted rounded-xl border p-4">
+            <p className="my-0 text-sm font-semibold">当前输出</p>
+            <p className="mt-2 mb-0 text-sm leading-6">{active.output}</p>
+          </div>
+        </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-3">
-        <Button
-          type="button"
-          disabled={nodeCount >= workflowNodes.length}
-          onClick={() => setNodeCount((value) => Math.min(value + 1, workflowNodes.length))}
-        >
+        <Button type="button" disabled={nodeCount >= workflowNodes.length} onClick={addStep}>
           添加下一步
         </Button>
-        <Button type="button" variant="outline" onClick={() => setNodeCount(3)}>
+        <Button type="button" variant="outline" onClick={resetWorkflow}>
           <RefreshCcw data-icon="inline-start" />
           重置
         </Button>

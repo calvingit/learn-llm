@@ -56,12 +56,21 @@ afterEach(() => {
 });
 
 describe("HomePage", () => {
-  it("keeps learning path unit badges sized to their text", () => {
+  it("renders the recommended hero navigation and full seven-unit path", () => {
     const view = render(<HomePage />);
-    const badge = Array.from(view.querySelectorAll("div")).find(
-      (element) => element.textContent === "单元 1",
-    );
 
-    expect(badge?.classList.contains("self-start")).toBe(true);
+    const headerStartLink = view.querySelector("header a[href='/courses/learn-llm/chapter-01']");
+    const unitLinks = view.querySelectorAll("#path a[href^='/courses/learn-llm#unit-']");
+
+    expect(headerStartLink).not.toBeNull();
+    expect(headerStartLink?.textContent ?? "").toContain("开始学习");
+    expect(unitLinks).toHaveLength(7);
+    unitLinks.forEach((link) => {
+      expect(link.textContent ?? "").not.toMatch(/\d+\s*章/);
+    });
+    expect(view.textContent).toContain("25 章");
+    expect(view.textContent).toContain("7 个单元");
+    expect(view.textContent).toContain("把 AI 讲清楚，把判断权留给你。");
+    expect(view.textContent).not.toContain("保持短、清楚、可互动");
   });
 });

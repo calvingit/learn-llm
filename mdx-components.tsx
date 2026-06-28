@@ -91,6 +91,15 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     li: ({ className, ...props }) => (
       <li className={cn("text-foreground/82 leading-7", className)} {...props} />
     ),
+    a: ({ className, ...props }) => (
+      <a
+        className={cn(
+          "text-primary decoration-primary/35 hover:decoration-primary underline underline-offset-4 transition-colors",
+          className,
+        )}
+        {...props}
+      />
+    ),
     blockquote: ({ className, ...props }) => (
       <blockquote
         className={cn(
