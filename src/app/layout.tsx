@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     default: "Learn-LLM",
     template: "%s | Learn-LLM",
   },
-  description: "普通人也能听懂的大模型通识课。",
+  description: "普通人也能看懂的大模型通识课。",
 };
 
 export default function RootLayout({

@@ -166,7 +166,7 @@ export default function HomePage() {
               </h1>
               <div className="flex flex-col gap-5">
                 <p className="text-foreground text-3xl leading-tight font-semibold md:text-4xl">
-                  普通人也能听懂的大模型通识课
+                  普通人也能看懂的大模型通识课
                 </p>
                 <div className="bg-primary h-1 w-16 rounded-full" />
                 <p className="text-muted-foreground max-w-xl text-lg leading-8">
