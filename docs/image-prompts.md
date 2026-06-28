@@ -370,6 +370,30 @@ Style: flat vector illustration, warm neutral palette with color-coded paths, cl
 
 ---
 
+## 第 25 章：多模态
+
+**文件名：** `chapter-25-multimodal-inputs.png`
+
+**概念：** 多模态输入通道 —— 文字、图片、语音、视频被转换成统一表示后汇入同一个模型，模型再用语言输出结果，同时提示隐私、成本和延迟边界。
+
+**提示词：**
+
+```
+Use case: scientific-educational
+Asset type: Learn-LLM chapter illustration, 16:9 educational course image
+Primary request: Create a modern flat educational illustration for a Chinese chapter about multimodal AI. The image should explain that a model can receive multiple kinds of input, not only text.
+Scene/backdrop: Clean digital textbook canvas with generous white space, subtle warm off-white background, no decorative blobs.
+Subject: In the center, an abstract AI model workspace represented as a calm geometric console or rounded node labeled exactly "统一理解". Four clear input lanes flow into it from the left and top: a text document labeled exactly "文字", a photo/screenshot card labeled exactly "图片", an audio waveform labeled exactly "语音", and a small strip of video frames labeled exactly "视频". Each input is transformed into small colored token-like tiles before reaching the model. On the right, the model outputs a simple text answer card, showing that different media can be understood together and answered in language.
+Composition/framing: 16:9 landscape, clean hub-and-spoke / convergence layout, centered model, input cards arranged around the left side, output card on the right. Leave balanced margins; keep the image uncluttered and readable at article width.
+Style/medium: Modern flat vector-style educational illustration, Notion / Linear / Stripe documentation illustration feel, geometric shapes, soft gradients, warm orange, teal, muted blue, and gold palette. No photorealism.
+Lighting/mood: Calm, clear, practical, optimistic but restrained.
+Text (verbatim): Only these Chinese labels: "文字", "图片", "语音", "视频", "统一理解". No other text.
+Constraints: Keep labels legible and exactly spelled; show multimodal input as extra channels, not as magic or omniscience. Include a subtle privacy/cost caution as tiny lock and clock icons near image/audio/video lanes, without text.
+Avoid: no brand logos, no watermark, no English text, no tiny paragraphs, no scary robot, no humanoid face detail, no overly saturated colors, no dark background.
+```
+
+---
+
 ## 生成建议
 
 - **统一风格：** 所有插图用同一套提示词风格模板（flat vector illustration, warm palette, educational textbook style, 16:9）

@@ -16,7 +16,7 @@ const requiredSections = [
   "## 一句话总结",
 ];
 
-const chapterFiles = Array.from({ length: 24 }, (_, index) => {
+const chapterFiles = Array.from({ length: 25 }, (_, index) => {
   return join(courseDir, `chapter-${String(index + 1).padStart(2, "0")}.mdx`);
 });
 
