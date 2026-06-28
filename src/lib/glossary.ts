@@ -1,7 +1,7 @@
 /**
  * Learn-LLM 术语表
  *
- * 收录 24 章中出现的核心术语，按拼音排序。
+ * 收录全部章节中出现的核心术语，按拼音排序。
  * 每条术语包含：中文名、英文名、一句话解释、所在章节。
  */
 
@@ -37,6 +37,30 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "基础概念",
   },
   {
+    zh: "监督学习",
+    en: "Supervised Learning",
+    definition:
+      "机器学习中最常见的方式：人提前给每份样本标好答案，模型照着答案学。人脸解锁、语音转文字、拍照翻译背后大多是监督学习。",
+    chapter: "chapter-02",
+    category: "基础概念",
+  },
+  {
+    zh: "无监督学习",
+    en: "Unsupervised Learning",
+    definition:
+      "人不给任何标签，模型自己从数据里找结构、找分组。适合“不知道答案长什么样但数据里应该藏着规律”的场景，如用户分群、主题聚类。",
+    chapter: "chapter-02",
+    category: "基础概念",
+  },
+  {
+    zh: "半监督学习",
+    en: "Semi-supervised Learning",
+    definition:
+      "介于监督和无监督之间：人只标了少量答案，大部分数据没标签。在标注成本高但原始数据多的领域特别实用，如方言识别、罕见病筛查。",
+    chapter: "chapter-02",
+    category: "基础概念",
+  },
+  {
     zh: "深度学习",
     en: "Deep Learning",
     definition:
@@ -64,7 +88,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "Transformer",
     en: "Transformer",
     definition:
-      "支撑现代大模型的重要网络结构，擅长处理序列数据中的长距离依赖关系，是 GPT 等技术路线的底层架构。",
+      "支撑现代大模型的重要网络结构。通过自注意力机制一次性处理整段文字，取代了逐词处理的旧方案，是许多主流大模型的底层架构。",
     chapter: "chapter-04",
     category: "基础概念",
   },
@@ -132,6 +156,30 @@ export const glossaryTerms: GlossaryTerm[] = [
     definition:
       "将自然语言文本切分成 token 序列的工具。不同模型使用不同 tokenizer，所以同一段文字的切分结果可能不同。",
     chapter: "chapter-05",
+    category: "生成机制",
+  },
+  {
+    zh: "自注意力机制",
+    en: "Self-Attention",
+    definition:
+      "Transformer 的核心机制：让文本中每个词同时关注其他所有词，计算关联强度。重点词多关注，无关词少关注。是模型理解指代关系和上下文依赖的基础。",
+    chapter: "chapter-04",
+    category: "生成机制",
+  },
+  {
+    zh: "多头注意力",
+    en: "Multi-Head Attention",
+    definition:
+      "同时从多个角度（语法、指代、情感等）各自做一遍自注意力，最后合并结果。让模型不只从单一维度理解文本，而是多维度抓重点。",
+    chapter: "chapter-04",
+    category: "生成机制",
+  },
+  {
+    zh: "位置编码",
+    en: "Positional Encoding",
+    definition:
+      "Transformer 一次性读入所有词，天然不知道顺序。位置编码给每个词贴上“第几号”的标签，让模型能区分“狗咬人”和“人咬狗”。",
+    chapter: "chapter-04",
     category: "生成机制",
   },
 
@@ -218,13 +266,37 @@ export const glossaryTerms: GlossaryTerm[] = [
     chapter: "chapter-06",
     category: "提示与交互",
   },
+  {
+    zh: "思维链（CoT）",
+    en: "Chain of Thought",
+    definition:
+      "让模型把推理过程一步步写出来。不是为了显得聪明，而是让中间步骤变得可见、可检查——每一步对不对，人能看。",
+    chapter: "chapter-10",
+    category: "提示与交互",
+  },
+  {
+    zh: "思维树（ToT）",
+    en: "Tree of Thoughts",
+    definition:
+      "在关键节点同时探索好几条推理路径，评估每个方向后再重点深入。像在地图上同时比三条路，发现某条堵了就换另一条。适合多方案比较的复杂任务。",
+    chapter: "chapter-10",
+    category: "提示与交互",
+  },
+  {
+    zh: "自洽性",
+    en: "Self-Consistency",
+    definition:
+      "让模型生成多条独立推理路径，再比较它们是否收敛到一致答案。随机错误会在多次采样中被稀释，但系统性的知识盲区不会因此消失。",
+    chapter: "chapter-10",
+    category: "提示与交互",
+  },
 
   // ── Agent 与工具 ──
   {
     zh: "Agent（智能体）",
     en: "Agent",
     definition:
-      "围绕目标反复推进的执行系统：思考下一步、采取行动、观察结果、再决定下一步，直到完成或需要人类介入。核心是形成'思考-行动-观察-再决策'闭环。",
+      "围绕目标反复推进的执行系统：思考下一步、采取行动、观察结果、再决定下一步，直到完成或需要人类介入。核心是形成“思考-行动-观察-再决策”闭环。",
     chapter: "chapter-18",
     category: "Agent与工具",
   },
@@ -232,7 +304,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "工具调用",
     en: "Tool Calling / Function Calling",
     definition:
-      "不是模型长出了手，而是模型提出意图（'需要查天气'），外部系统负责执行工具，再把结果交回模型组织回答。模型是调度台，不是执行者。",
+      "不是模型长出了手，而是模型提出意图（“需要查天气”），外部系统负责执行工具，再把结果交回模型组织回答。模型是调度台，不是执行者。",
     chapter: "chapter-17",
     category: "Agent与工具",
   },
@@ -292,6 +364,62 @@ export const glossaryTerms: GlossaryTerm[] = [
     definition:
       "大模型训练的第四阶段：根据人类偏好反馈训练模型——更有帮助、更诚实、更安全。帮助模型在风险请求中拒绝，在不确定时保守。",
     chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "Epoch（轮次）",
+    en: "Epoch",
+    definition:
+      "模型把所有训练数据完整学完一遍的过程。一个 Epoch = 从头到尾过完一遍全部数据。训练通常需要多个 Epoch。",
+    chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "Batch（批次）",
+    en: "Batch",
+    definition:
+      "单次喂给模型的数据量。因为全部数据太大不可能一次塞进 GPU，所以拆成小份。每次处理一小份，逐步学完。",
+    chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "Step（训练步）",
+    en: "Step",
+    definition:
+      "每处理完一个 Batch、调整一次模型参数，叫一个 Step。相当于学完一小口，消化一次。注意和“步长”（学习率）是不同概念。",
+    chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "MOE（混合专家）",
+    en: "Mixture of Experts",
+    definition:
+      "把模型拆成多个“专家”子网络，每个 token 只激活相关的那几个，不相关的保持休眠。参数可以很多但每次运算量小——大而便宜。DeepSeek-V3 是典型代表。",
+    chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "LoRA（低秩适应）",
+    en: "Low-Rank Adaptation",
+    definition:
+      "一种轻量微调方法：不改变原模型的核心参数，只在外面挂一组小型“插件参数”单独训练。完整模型几百 GB，LoRA 插件可能只有几十 MB。",
+    chapter: "chapter-23",
+    category: "训练与模型",
+  },
+  {
+    zh: "量化",
+    en: "Quantization",
+    definition:
+      "用更低精度存储模型参数，通常能明显降低模型体积和显存占用。质量和速度变化取决于模型、方法、硬件和推理框架。",
+    chapter: "chapter-24",
+    category: "训练与模型",
+  },
+  {
+    zh: "剪枝",
+    en: "Pruning",
+    definition:
+      "模型压缩手段之一：去除模型中不重要的连接和参数。做得好可以降低体积和计算量，做不好会损伤能力，需要评测验证。",
+    chapter: "chapter-24",
     category: "训练与模型",
   },
   {
