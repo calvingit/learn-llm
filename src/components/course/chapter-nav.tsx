@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,34 +14,34 @@ export function ChapterNav({ previous, next }: ChapterNavProps) {
       <div>
         {previous ? (
           <Button asChild variant="outline">
-            <Link href={`/courses/learn-llm/${previous.slug}`}>
+            <a href={`/courses/learn-llm/${previous.slug}`}>
               <ArrowLeft data-icon="inline-start" />
               上一章：{previous.title}
-            </Link>
+            </a>
           </Button>
         ) : (
           <Button asChild variant="outline">
-            <Link href="/courses/learn-llm">
+            <a href="/courses/learn-llm">
               <ArrowLeft data-icon="inline-start" />
               返回课程目录
-            </Link>
+            </a>
           </Button>
         )}
       </div>
       <div className="md:justify-self-end">
         {next ? (
           <Button asChild>
-            <Link href={`/courses/learn-llm/${next.slug}`}>
+            <a href={`/courses/learn-llm/${next.slug}`}>
               下一章：{next.title}
               <ArrowRight data-icon="inline-end" />
-            </Link>
+            </a>
           </Button>
         ) : (
           <Button asChild>
-            <Link href="/courses/learn-llm">
+            <a href="/courses/learn-llm">
               回到课程目录
               <ArrowRight data-icon="inline-end" />
-            </Link>
+            </a>
           </Button>
         )}
       </div>

@@ -1,3 +1,5 @@
+import { UnitQuiz } from "@/components/course/unit-quiz";
+
 第五单元的核心线索是"从说对话到做成事"。Prompt 不是咒语而是上下文控制，工具调用让模型从只会说话变成能请求外部系统执行操作，Agent 把单次回答扩展成围绕目标的执行闭环，但 Agent 也会失控——目标漂移、重复循环、工具误用、伪造结果。
 
 ### 你应该已经掌握
@@ -11,7 +13,7 @@
 
 把 Agent 想成一个能力很强但需要监督的实习生。它很适合做研究、整理、草稿这类"建议型闭环"，但在涉及发邮件、付款、删除数据等"执行型闭环"时，必须有人签字确认。
 
-<UnitQuiz unitSlug="unit-05" />
+<UnitQuiz client:visible unitSlug="unit-05" />
 
 ### 进入下一单元
 

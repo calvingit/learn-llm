@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { FeatureDetector } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 传统机器学习常常需要人先告诉机器“看哪些特征”。比如识别房价时看面积、地段、楼层；识别垃圾邮件时看标题、链接、发件人。可是在图片、语音、自然语言这类复杂任务里，人很难把所有有效特征提前写清楚。猫的轮廓、语气的变化、句子的含义，都不是几条简单规则能描述完的。
@@ -30,7 +33,7 @@
 
 下面的组件用猫的识别过程模拟“特征提取”。你可以点击不同线索，观察模型如何把零散特征组合成判断。
 
-<FeatureDetector />
+<FeatureDetector client:visible />
 
 ## 常见误区
 

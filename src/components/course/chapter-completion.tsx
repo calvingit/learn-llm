@@ -1,5 +1,3 @@
-"use client";
-
 import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,16 +14,13 @@ export function ChapterCompletion({ chapter, chapters }: ChapterCompletionProps)
   const { completedSet, completeChapter } = useCourseProgress();
   const completed = completedSet.has(chapter.slug);
   const completedCount = chapters.filter((item) => completedSet.has(item.slug)).length;
-  const progressValue =
-    chapters.length > 0 ? (completedCount / chapters.length) * 100 : 0;
+  const progressValue = chapters.length > 0 ? (completedCount / chapters.length) * 100 : 0;
 
   return (
-    <div className="rounded-lg border bg-card p-4 shadow-sm">
+    <div className="bg-card rounded-lg border p-4 shadow-sm">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium text-muted-foreground">
-            本地学习进度
-          </p>
+          <p className="text-muted-foreground text-sm font-medium">本地学习进度</p>
           <p className="text-lg font-semibold">
             已完成 {completedCount} / {chapters.length} 章
           </p>

@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { RiskBoundaryCards } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 学完大模型之后，最重要的问题不是“AI 能不能做这件事”，而是“这件事的哪一部分适合交给 AI，哪一部分必须由人负责”。AI 很适合处理语言、结构、草稿和备选方案，但它不应该替人承担高风险决策的责任。
@@ -28,7 +31,7 @@
 
 下面的边界卡会把同一任务拆成 AI 适合做的部分和人必须负责的部分。重点看“辅助”和“负责”不是一回事。
 
-<RiskBoundaryCards />
+<RiskBoundaryCards client:visible />
 
 ## 常见误区
 

@@ -1,3 +1,5 @@
+import { UnitQuiz } from "@/components/course/unit-quiz";
+
 第二单元的核心线索是"大模型眼里的文字和人类不一样"。从 token 这个基本单位出发，我们串起了上下文窗口的容量限制、长对话变贵的原因、next-token prediction 的生成机制、以及温度如何影响输出的稳定性和多样性。
 
 ### 你应该已经掌握
@@ -11,7 +13,7 @@
 
 模型不是一个"读完句子然后回答"的对话者，而是一个"根据当前上下文中的 token 序列，预测下一个 token"的续写器。你给的上下文越清楚，它续写得越准确；上下文越模糊，它越要猜。
 
-<UnitQuiz unitSlug="unit-02" />
+<UnitQuiz client:visible unitSlug="unit-02" />
 
 ### 进入下一单元
 

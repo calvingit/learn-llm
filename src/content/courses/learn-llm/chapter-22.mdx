@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { DistillationDemo } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 为什么小模型可以拥有一部分大模型能力？为什么手机、浏览器、本地电脑上也能跑一些 AI 功能？这背后常见的一条路线是蒸馏。
@@ -32,7 +35,7 @@
 
 下面的组件对比大模型老师和小模型学生对同一问题的回答。重点看：小模型保留核心意思，但会牺牲细节和泛化能力。
 
-<DistillationDemo />
+<DistillationDemo client:visible />
 
 ## 常见误区
 

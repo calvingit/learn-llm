@@ -53,7 +53,6 @@ describe("UnitQuiz", () => {
   it("submit button is disabled until all questions answered", () => {
     const view = render(<UnitQuiz unitSlug="unit-01" />);
 
-    const submitButton = view.querySelector("button") as HTMLButtonElement;
     // 找到"提交答案"按钮（disabled因为还没回答）
     const buttons = view.querySelectorAll("button");
     const submitBtn = Array.from(buttons).find((b) => b.textContent === "提交答案");

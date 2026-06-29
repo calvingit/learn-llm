@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { RAGSimulator } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 大模型为什么需要 RAG？如果模型已经读过很多资料，为什么还要临时检索文档？原因很简单：模型预训练学到的是过去大量文本中的模式，它不天然知道你公司的最新制度、你上传的合同、昨天更新的产品文档，也不能保证每个事实都记得准确。
@@ -28,7 +31,7 @@ RAG 是 Retrieval-Augmented Generation，意思是检索增强生成。它通常
 
 下面的模拟器展示了 RAG 从用户问题到带依据回答的基本管线。重点看：RAG 多了一步“资料进入上下文”，而不是模型凭空记住所有信息。
 
-<RAGSimulator />
+<RAGSimulator client:visible />
 
 ## 常见误区
 

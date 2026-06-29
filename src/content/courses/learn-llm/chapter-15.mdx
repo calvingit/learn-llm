@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { ModelEvolutionSimulator } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 为什么模型有时会拒绝危险请求？为什么它不只是“用户让做什么就做什么”？这背后是对齐。对齐的目标，是让模型在有能力的同时，更符合人类使用场景中的帮助性、诚实性和安全边界。
@@ -28,7 +31,7 @@
 
 下面的组件展示同一个高风险请求在不同训练阶段可能出现的回答差异。重点看：能力和边界是两件都要训练的事。
 
-<ModelEvolutionSimulator />
+<ModelEvolutionSimulator client:visible />
 
 ## 常见误区
 

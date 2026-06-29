@@ -1,0 +1,34 @@
+---
+import { CourseCatalog } from "@/components/course/course-catalog";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { learnLLMChapters } from "@/lib/courses";
+import { buttonVariants } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+
+const contentChapterCount = learnLLMChapters.filter((chapter) =>
+  chapter.slug.startsWith("chapter-"),
+).length;
+const unitCount = new Set(learnLLMChapters.map((chapter) => chapter.unit)).size;
+const description = `Learn-LLM ${contentChapterCount} 章交互式课程目录。`;
+---
+
+<BaseLayout title="课程目录" description={description}>
+  <main class="bg-background min-h-screen">
+    <div class="mx-auto max-w-6xl px-5 py-8">
+      <a class={buttonVariants({ variant: "ghost" })} href="/">
+        <ArrowLeft data-icon="inline-start" />
+        返回首页
+      </a>
+      <section class="mt-8 flex flex-col gap-4">
+        <h1 class="text-4xl font-semibold tracking-normal md:text-5xl">Learn-LLM 课程目录</h1>
+        <p class="text-muted-foreground max-w-3xl text-lg leading-8">
+          {contentChapterCount} 章、{unitCount} 个单元，从“AI 到底是什么”讲到 RAG、Agent
+          和日常工作流。每章都围绕一个问题展开，保持短、清楚、可互动。
+        </p>
+      </section>
+      <section class="mt-10">
+        <CourseCatalog client:load chapters={learnLLMChapters} />
+      </section>
+    </div>
+  </main>
+</BaseLayout>

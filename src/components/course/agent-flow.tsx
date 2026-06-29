@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
@@ -35,13 +33,11 @@ export function AgentFlow() {
   const visibleSteps = steps.slice(0, activeStep + 1);
 
   return (
-    <section className="my-8 rounded-xl border bg-card p-5 shadow-sm">
+    <section className="bg-card my-8 rounded-xl border p-5 shadow-sm">
       <div className="flex flex-col gap-4">
         <div>
-          <h3 className="mt-0 text-xl font-semibold tracking-normal">
-            Agent 工具调用流程
-          </h3>
-          <p className="my-2 text-sm leading-6 text-muted-foreground">
+          <h3 className="mt-0 text-xl font-semibold tracking-normal">Agent 工具调用流程</h3>
+          <p className="text-muted-foreground my-2 text-sm leading-6">
             逐步点亮每一步，观察模型和外部工具如何配合。
           </p>
         </div>
@@ -60,21 +56,19 @@ export function AgentFlow() {
                 )}
               >
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  <span className="bg-primary text-primary-foreground inline-flex size-8 items-center justify-center rounded-full text-sm font-semibold">
                     {index + 1}
                   </span>
                   <div>
                     <h3 className="mt-0 text-lg font-semibold">{step.title}</h3>
-                    <p className="my-0 text-sm leading-6 text-muted-foreground">
-                      {step.detail}
-                    </p>
+                    <p className="text-muted-foreground my-0 text-sm leading-6">{step.detail}</p>
                   </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
-        <div className="rounded-lg bg-muted p-4 text-sm leading-7 text-muted-foreground">
+        <div className="bg-muted text-muted-foreground rounded-lg p-4 text-sm leading-7">
           当前已经点亮：{visibleSteps.map((step) => step.title).join(" → ")}
         </div>
         <div className="flex flex-wrap gap-3">

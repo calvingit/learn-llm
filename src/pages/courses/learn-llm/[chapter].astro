@@ -1,0 +1,76 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import { ChapterCompletion } from "@/components/course/chapter-completion";
+import { ChapterNav } from "@/components/course/chapter-nav";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { mdxComponents } from "@/components/mdx/mdx-components";
+import { getAdjacentChapters, getChapterBySlug, learnLLMChapters } from "@/lib/courses";
+import { ArrowLeft } from "lucide-react";
+
+const chapterModules = import.meta.glob<{ default: AstroComponentFactory }>(
+  "../../../content/courses/learn-llm/*.mdx",
+  { eager: true },
+);
+
+export function getStaticPaths() {
+  return learnLLMChapters.map((chapter) => ({
+    params: {
+      chapter: chapter.slug,
+    },
+  }));
+}
+
+const slug = Astro.params.chapter;
+
+if (!slug) {
+  return Astro.redirect("/404");
+}
+
+const chapter = getChapterBySlug(slug);
+const ChapterContent =
+  chapterModules[`../../../content/courses/learn-llm/${slug}.mdx`]?.default;
+
+if (!chapter || !ChapterContent) {
+  return Astro.redirect("/404");
+}
+
+const { previous, next } = getAdjacentChapters(slug);
+---
+
+<BaseLayout title={chapter.title} description={chapter.description}>
+  <main class="bg-background min-h-screen">
+    <div class="mx-auto max-w-4xl px-5 py-8">
+      <a class={buttonVariants({ variant: "ghost" })} href="/courses/learn-llm">
+        <ArrowLeft data-icon="inline-start" />
+        返回课程目录
+      </a>
+      <header class="bg-card mt-8 rounded-xl border p-6 shadow-sm md:p-8">
+        <div class="flex flex-wrap gap-3">
+          <Badge variant="muted">{chapter.unit}</Badge>
+          <Badge variant="secondary">
+            {
+              chapter.slug.startsWith("unit-")
+                ? "单元总结"
+                : `第 ${String(chapter.order).padStart(2, "0")} 章`
+            }
+          </Badge>
+        </div>
+        <h1 class="mt-5 text-4xl leading-tight font-semibold tracking-normal md:text-5xl">
+          {chapter.title}
+        </h1>
+        <p class="text-muted-foreground mt-4 text-lg leading-8">{chapter.description}</p>
+        <div class="mt-6">
+          <ChapterCompletion client:load chapter={chapter} chapters={learnLLMChapters} />
+        </div>
+      </header>
+
+      <article class="bg-card mt-8 rounded-xl border px-5 py-2 shadow-sm md:px-8">
+        <ChapterContent components={mdxComponents} />
+      </article>
+
+      <ChapterNav previous={previous} next={next} />
+    </div>
+  </main>
+</BaseLayout>

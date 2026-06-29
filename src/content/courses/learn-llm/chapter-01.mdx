@@ -1,3 +1,7 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { AITimeline } from "@/components/course/ai-timeline";
+import { AiHierarchyMap } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 很多人第一次接触 AI，会把它直接等同于 ChatGPT、机器人，或者某个会画图、会写文案的产品。这样理解很自然，因为我们通常是从一个具体工具认识一项技术。但如果只记住产品名字，就很容易在后面混淆：机器学习、深度学习、大模型到底是不是一回事？为什么有些 AI 能识别垃圾邮件，有些能推荐路线，有些能聊天写文章？
@@ -29,13 +33,13 @@ AI、机器学习、深度学习、大模型之间不是并列关系，而是层
 
 AI 的发展不是一夜之间发生的。从最早的手写规则，到机器学习从样本中归纳，再到深度学习自己找特征，最后到大模型统一处理多种任务，每一步都建立在前面基础之上。下面的时间线把这个演进过程串了起来。
 
-<AITimeline />
+<AITimeline client:visible />
 
 ## 互动理解
 
 下面的层级图可以帮助你把四个概念放回正确位置。点击不同圈层时，重点看”它属于谁”和”它解决什么问题”。
 
-<AiHierarchyMap />
+<AiHierarchyMap client:visible />
 
 ## 常见误区
 

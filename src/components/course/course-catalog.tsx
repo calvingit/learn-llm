@@ -1,19 +1,9 @@
-"use client";
-
-import Link from "next/link";
 import { useEffect } from "react";
 import { ArrowRight, CheckCircle2, Circle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { CourseChapter } from "@/lib/courses";
 import { useCourseProgress } from "./use-course-progress";
@@ -63,10 +53,10 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
             </h2>
           </div>
           <Button asChild>
-            <Link href={`/courses/learn-llm/${nextChapter.slug}`}>
+            <a href={`/courses/learn-llm/${nextChapter.slug}`}>
               继续学习
               <ArrowRight data-icon="inline-end" />
-            </Link>
+            </a>
           </Button>
         </div>
         <Progress className="mt-5" value={progressValue} />
@@ -107,10 +97,10 @@ export function CourseCatalog({ chapters }: CourseCatalogProps) {
                   </CardHeader>
                   <CardFooter>
                     <Button asChild variant={completed ? "outline" : "default"}>
-                      <Link href={`/courses/learn-llm/${chapter.slug}`}>
+                      <a href={`/courses/learn-llm/${chapter.slug}`}>
                         {completed ? "重新阅读" : "开始学习"}
                         <ArrowRight data-icon="inline-end" />
-                      </Link>
+                      </a>
                     </Button>
                   </CardFooter>
                 </Card>

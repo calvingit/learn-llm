@@ -2,9 +2,9 @@
 
 ## 项目概述
 
-Learn-LLM — 面向普通人的大模型通识交互式学习网站。24 章、7 个单元，中文内容。
+Learn-LLM — 面向普通人的大模型通识交互式学习网站。25 章、7 个单元，中文内容。
 
-技术栈：Next.js 16 App Router + React 19 + TypeScript 6 + MDX + Tailwind CSS v4 + shadcn/ui (new-york) + Motion
+技术栈：Astro 7 静态站 + React 19 islands + TypeScript 6 + MDX + Tailwind CSS v4 + shadcn/ui (new-york) + Motion
 
 ## 常用命令
 
@@ -18,11 +18,12 @@ npm run format      # prettier --write .
 
 ## 代码约定
 
-- Tailwind v4：无 `tailwind.config.*` 文件，主题通过 `src/app/globals.css` 中的 `@theme inline {}` 和 CSS 变量配置
+- Tailwind v4：无 `tailwind.config.*` 文件，主题通过 `src/styles/globals.css` 中的 `@theme inline {}` 和 CSS 变量配置
 - shadcn/ui：new-york 风格，`cn()` 工具函数位于 `@/lib/utils`
 - 课程内容：MDX 文件位于 `src/content/courses/learn-llm/`，每章一个 `chapter-XX.mdx`
 - MDX 文件不以 `# 标题` 开头（标题由页面 `<header>` 渲染，MDX 内容从 `## 核心问题` 开始）
-- 交互组件映射：`mdx-components.tsx` 中注册，组件实现在 `src/components/course/`
+- MDX 基础元素样式：`src/components/mdx/mdx-components.tsx`
+- MDX 交互组件：在使用它的 MDX 文件顶部显式 import，并用 `client:visible` hydration
 - 课程元数据：`src/lib/courses.ts` 中 `learnLLMChapters` 数组
 - 学习进度：`localStorage` 本地存储
 - TypeScript strict 模式，`allowJs: false`
@@ -31,11 +32,10 @@ npm run format      # prettier --write .
 ## 项目结构要点
 
 ```
-src/app/courses/learn-llm/[chapter]/page.tsx  # 章节详情页（动态路由）
+src/pages/courses/learn-llm/[chapter].astro   # 章节详情页（静态路由）
 src/content/courses/learn-llm/chapter-XX.mdx  # 章节 MDX 内容
 src/components/course/                         # 课程交互组件
 src/lib/courses.ts                             # 课程数据 + 工具函数
-src/lib/chapter-content.ts                     # MDX 动态加载
 src/lib/course-interactions.ts                 # 交互逻辑
 ```
 

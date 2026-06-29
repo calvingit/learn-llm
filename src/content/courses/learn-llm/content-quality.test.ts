@@ -24,12 +24,17 @@ function readChapter(file: string) {
   return readFileSync(file, "utf8");
 }
 
+function stripMdxImports(content: string) {
+  return content.replace(/^(import .+;\n)+\n?/, "");
+}
+
 describe("learn-llm chapter content quality", () => {
   it("keeps every chapter substantial and consistently structured", () => {
     for (const file of chapterFiles) {
       const content = readChapter(file);
+      const body = stripMdxImports(content);
 
-      expect(content.startsWith("## 核心问题"), basename(file)).toBe(true);
+      expect(body.startsWith("## 核心问题"), basename(file)).toBe(true);
       expect(content.length, basename(file)).toBeGreaterThanOrEqual(1400);
 
       for (const section of requiredSections) {

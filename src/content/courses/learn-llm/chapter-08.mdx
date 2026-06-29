@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { PredictNextWordSimulator } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 大模型为什么只是“预测下一个词”，却能表现得像在理解、推理和写作？这个问题听起来反直觉：如果它只是在接下一句话，为什么能解释概念、写邮件、改代码、制定计划？
@@ -28,7 +31,7 @@
 
 下面的小游戏展示了候选续写的概率。注意概率最高的选项通常最符合上下文，但低概率选项并非永远不会出现。
 
-<PredictNextWordSimulator />
+<PredictNextWordSimulator client:visible />
 
 ## 常见误区
 

@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { HallucinationDetector } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 既然大模型能写得这么流畅，为什么还会一本正经地编造事实？这就是常说的幻觉。幻觉最危险的地方，不是模型答不上来，而是它把错误说得像真的：结构完整、语气自信、细节丰富，甚至看起来像引用了来源。
@@ -28,7 +31,7 @@
 
 下面的探测器展示几类容易诱发幻觉的问题。重点看“听起来合理”和“有来源支持”之间的差别。
 
-<HallucinationDetector />
+<HallucinationDetector client:visible />
 
 ## 常见误区
 

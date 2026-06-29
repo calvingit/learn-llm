@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { ArchitectureShowdown } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 前面 24 章我们主要在讨论"模型读文字、写文字"。但你可能已经注意到，ChatGPT 可以看懂你上传的截图，Claude 能分析 PDF 文档里的图表，Gemini 能同时处理视频和语音，手机上有些 AI 能识别照片里的物体并直接用中文描述。
@@ -32,7 +35,7 @@
 
 下面的对比组件展示了同一个问题在纯文本模型和多模态模型面前的不同处境。重点看：当信息天然是视觉形态时（图表、截图、照片），多模态模型省去了"口述转文字"这一步。
 
-<ArchitectureShowdown />
+<ArchitectureShowdown client:visible />
 
 ## 常见误区
 

@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { ReasoningPathCompare } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 大模型回答复杂问题时，看起来会一步步分析、比较、推导。它是真的在思考吗？这个问题不能简单回答“是”或“不是”。更务实的理解是：模型能生成类似推理过程的文本，并且这种分步骤表达常常有助于解决问题，但它不等于人类大脑中的思考过程。
@@ -34,7 +37,7 @@
 
 下面的组件比较直接要答案和要求展示依据两种方式。重点看：分步骤不是为了显得聪明，而是为了让人能检查。
 
-<ReasoningPathCompare />
+<ReasoningPathCompare client:visible />
 
 ## 常见误区
 

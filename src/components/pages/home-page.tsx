@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
@@ -123,14 +121,14 @@ export default function HomePage() {
     <main className="bg-background min-h-screen">
       <header className="bg-background/95 sticky top-0 z-20 border-b backdrop-blur">
         <div className="mx-auto flex max-w-[90rem] items-center justify-between px-5 py-4">
-          <Link className="flex items-center gap-3 text-lg font-semibold" href="/">
+          <a className="flex items-center gap-3 text-lg font-semibold" href="/">
             <BookOpen className="text-primary size-7" />
             Learn-LLM
-          </Link>
+          </a>
           <nav className="text-foreground hidden items-center gap-7 text-sm font-medium md:flex">
-            <Link className="hover:text-foreground" href="/courses/learn-llm">
+            <a className="hover:text-foreground" href="/courses/learn-llm">
               课程目录
-            </Link>
+            </a>
             <a className="hover:text-foreground" href="#path">
               学习路径
             </a>
@@ -138,7 +136,7 @@ export default function HomePage() {
               适合人群
             </a>
             <Button asChild size="sm">
-              <Link href="/courses/learn-llm/chapter-01">开始学习</Link>
+              <a href="/courses/learn-llm/chapter-01">开始学习</a>
             </Button>
           </nav>
         </div>
@@ -146,13 +144,13 @@ export default function HomePage() {
 
       <section className="relative overflow-hidden border-b">
         <div className="absolute inset-y-0 right-0 hidden w-[66%] lg:block">
-          <Image
+          <img
             src="/images/learn-llm-hero.png"
             alt=""
             width={1536}
             height={1024}
-            priority
             className="h-full w-full object-cover object-center"
+            loading="eager"
           />
           <div className="from-background via-background/25 absolute inset-0 bg-gradient-to-r to-transparent" />
           <div className="from-background absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r to-transparent" />
@@ -176,24 +174,24 @@ export default function HomePage() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-14 px-8 text-lg">
-                <Link href="/courses/learn-llm/chapter-01">
+                <a href="/courses/learn-llm/chapter-01">
                   开始学习
                   <ArrowRight data-icon="inline-end" />
-                </Link>
+                </a>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg">
-                <Link href="/courses/learn-llm">查看课程目录</Link>
+                <a href="/courses/learn-llm">查看课程目录</a>
               </Button>
             </div>
             <div className="lg:hidden">
               <div className="bg-card overflow-hidden rounded-xl border shadow-sm">
-                <Image
+                <img
                   src="/images/learn-llm-hero.png"
                   alt="Learn-LLM 课程的互动学习视觉图"
                   width={1536}
                   height={1024}
-                  priority
                   className="aspect-video h-full w-full object-cover sm:aspect-[4/3]"
+                  loading="eager"
                 />
               </div>
             </div>
@@ -235,7 +233,7 @@ export default function HomePage() {
                 const Icon = item.icon;
 
                 return (
-                  <Link
+                  <a
                     key={item.anchor}
                     className="group relative flex flex-col items-center text-center"
                     href={`/courses/learn-llm#${item.anchor}`}
@@ -248,7 +246,7 @@ export default function HomePage() {
                     <span className="text-muted-foreground mt-1 text-xs leading-5">
                       {item.description}
                     </span>
-                  </Link>
+                  </a>
                 );
               })}
             </div>
@@ -268,10 +266,10 @@ export default function HomePage() {
           </div>
           <div className="flex lg:justify-end">
             <Button asChild variant="outline">
-              <Link href="/courses/learn-llm">
+              <a href="/courses/learn-llm">
                 查看全部章节
                 <ArrowRight data-icon="inline-end" />
-              </Link>
+              </a>
             </Button>
           </div>
         </div>
@@ -313,10 +311,10 @@ export default function HomePage() {
               </div>
             ))}
             <Button asChild className="h-auto justify-between p-4 sm:col-span-2">
-              <Link href="/courses/learn-llm/chapter-01">
+              <a href="/courses/learn-llm/chapter-01">
                 从第一章开始
                 <ArrowRight data-icon="inline-end" />
-              </Link>
+              </a>
             </Button>
           </div>
         </div>
@@ -326,10 +324,10 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 border-t pt-8 md:flex-row md:items-center md:justify-between">
           <p className="text-muted-foreground leading-7">把 AI 讲清楚，把判断权留给你。</p>
           <Button asChild variant="ghost">
-            <Link href="/courses/learn-llm">
+            <a href="/courses/learn-llm">
               进入课程目录
               <ArrowRight data-icon="inline-end" />
-            </Link>
+            </a>
           </Button>
         </div>
       </section>

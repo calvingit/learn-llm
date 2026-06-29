@@ -18,7 +18,7 @@ describe("quiz-questions", () => {
   });
 
   it("each unit has 2-3 questions with exactly one correct answer", () => {
-    for (const [slug, data] of Object.entries(unitQuizData)) {
+    for (const data of Object.values(unitQuizData)) {
       expect(data.questions.length).toBeGreaterThanOrEqual(1);
       expect(data.questions.length).toBeLessThanOrEqual(3);
 

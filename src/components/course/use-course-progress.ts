@@ -1,12 +1,6 @@
-"use client";
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  type CourseProgress,
-  markChapterComplete,
-  readProgress,
-} from "@/lib/progress";
+import { type CourseProgress, markChapterComplete, readProgress } from "@/lib/progress";
 
 const EMPTY_PROGRESS: CourseProgress = { completedSlugs: [] };
 
@@ -14,18 +8,12 @@ function getProgressStorage(): Storage | undefined {
   try {
     return window.localStorage;
   } catch (error) {
-    console.warn(
-      "Learn-LLM progress storage is unavailable; progress will stay in memory.",
-      error,
-    );
+    console.warn("Learn-LLM progress storage is unavailable; progress will stay in memory.", error);
     return undefined;
   }
 }
 
-function completeProgressInMemory(
-  progress: CourseProgress,
-  slug: string,
-): CourseProgress {
+function completeProgressInMemory(progress: CourseProgress, slug: string): CourseProgress {
   if (progress.completedSlugs.includes(slug)) {
     return progress;
   }
@@ -48,17 +36,11 @@ export function useCourseProgress() {
     try {
       setProgress(readProgress(storage));
     } catch (error) {
-      console.warn(
-        "Learn-LLM progress could not be read; progress will stay in memory.",
-        error,
-      );
+      console.warn("Learn-LLM progress could not be read; progress will stay in memory.", error);
     }
   }, []);
 
-  const completedSet = useMemo(
-    () => new Set(progress.completedSlugs),
-    [progress.completedSlugs],
-  );
+  const completedSet = useMemo(() => new Set(progress.completedSlugs), [progress.completedSlugs]);
 
   const completeChapter = useCallback((slug: string) => {
     setProgress((currentProgress) => {
@@ -72,10 +54,7 @@ export function useCourseProgress() {
       try {
         return markChapterComplete(storage, slug);
       } catch (error) {
-        console.warn(
-          "Learn-LLM progress could not be saved; progress will stay in memory.",
-          error,
-        );
+        console.warn("Learn-LLM progress could not be saved; progress will stay in memory.", error);
         return inMemoryProgress;
       }
     });

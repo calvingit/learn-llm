@@ -1,0 +1,28 @@
+---
+import "@/styles/globals.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const siteName = "Learn-LLM";
+const {
+  title,
+  description = "普通人也能看懂的大模型通识课。",
+} = Astro.props;
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+---
+
+<!doctype html>
+<html lang="zh-CN" data-scroll-behavior="smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

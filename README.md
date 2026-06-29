@@ -13,7 +13,7 @@
 
 ## 技术栈
 
-- Next.js 16 App Router
+- Astro 7 静态站
 - React 19
 - TypeScript 6
 - MDX
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-开发服务器默认运行在 `http://localhost:3000`。
+开发服务器默认运行在 `http://localhost:4321`。
 
 ## 常用命令
 
@@ -45,15 +45,14 @@ npm run format:check # 检查格式
 ## 项目结构
 
 ```text
-src/app/
+src/pages/
   courses/learn-llm/                 # 课程目录与章节页面
 src/components/course/               # 课程交互组件、测验和可视化
+src/components/mdx/                  # MDX 基础元素样式
 src/content/courses/learn-llm/       # 课程 MDX 内容
 src/lib/
   courses.ts                         # 课程元数据
-  chapter-content.ts                 # MDX 内容映射
   course-interactions.ts             # 交互逻辑
-mdx-components.tsx                   # MDX 组件注册
 ```
 
 ## 内容维护约定
@@ -61,8 +60,8 @@ mdx-components.tsx                   # MDX 组件注册
 - 每章内容放在 `src/content/courses/learn-llm/chapter-XX.mdx`。
 - 单元总结放在 `src/content/courses/learn-llm/unit-XX-summary.mdx`。
 - 章节标题由页面 header 渲染，MDX 文件不要以 `# 标题` 开头，正文从 `## 核心问题` 开始。
-- 新增章节后，需要同步更新 `src/lib/courses.ts` 和 `src/lib/chapter-content.ts`。
-- 新增可交互组件后，需要在 `mdx-components.tsx` 中注册，组件实现放在 `src/components/course/`。
+- 新增章节后，需要同步更新 `src/lib/courses.ts`。
+- 新增可交互组件后，在使用它的 MDX 文件顶部显式 import，并使用 `client:visible`；组件实现放在 `src/components/course/`。
 
 ## 适合人群
 

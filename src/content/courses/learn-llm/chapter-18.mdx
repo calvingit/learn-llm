@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { AgentWorkflowViewer } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 Agent 和普通聊天机器人有什么区别？普通聊天通常是一问一答：用户问，模型答。Agent 则围绕一个目标反复推进：思考下一步、采取行动、观察结果、再决定下一步，直到目标完成、失败或需要人类介入。
@@ -28,7 +31,7 @@ Agent 的关键不在于名字高级，而在于它形成了执行闭环。
 
 下面的闭环组件会一步步推进 Agent 的执行过程。重点看它什么时候行动，什么时候观察，什么时候停止。
 
-<AgentWorkflowViewer />
+<AgentWorkflowViewer client:visible />
 
 ## 常见误区
 

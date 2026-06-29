@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { CotStepByStep } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 为什么有些人问 AI 得到的答案清楚、有用、可执行，有些人得到的却很泛、很虚、很难落地？差别不只在模型能力，也在问题是否给出了足够上下文和检查标准。
@@ -28,7 +31,7 @@
 
 下面的组件会逐步展开可检查的推理步骤。你可以观察：把条件、顺序、计算和检查拆开后，错误更容易被发现。
 
-<CotStepByStep />
+<CotStepByStep client:visible />
 
 ## 常见误区
 

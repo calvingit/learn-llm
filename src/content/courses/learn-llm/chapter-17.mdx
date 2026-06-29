@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { ToolCallingStepper } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 大模型本身只会生成文本。那它怎样查天气、读数据库、发邮件、运行代码、调用搜索？答案是工具调用。模型负责判断“下一步需要什么工具”和“工具结果怎样用于回答”，真正执行动作的是外部系统。
@@ -28,7 +31,7 @@
 
 下面的分步器展示了一次天气工具调用。重点看“模型决定下一步”和“工具负责执行”是分开的。
 
-<ToolCallingStepper />
+<ToolCallingStepper client:visible />
 
 ## 常见误区
 

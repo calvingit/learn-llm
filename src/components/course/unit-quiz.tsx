@@ -1,7 +1,4 @@
-"use client";
-
 import { useState } from "react";
-import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 
@@ -149,10 +146,10 @@ export function UnitQuiz({ unitSlug }: UnitQuizProps) {
         </Button>
         {nextChapterSlug && (
           <Button asChild variant="ghost" className="ml-auto">
-            <Link href={`/courses/learn-llm/${nextChapterSlug}`}>
+            <a href={`/courses/learn-llm/${nextChapterSlug}`}>
               跳过测验，进入下一单元
               <ArrowRight data-icon="inline-end" />
-            </Link>
+            </a>
           </Button>
         )}
       </div>

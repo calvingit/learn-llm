@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { ContextWindowMeter } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 为什么一段长对话聊着聊着，模型会忘记前面说过的要求？为什么你明明在前十轮已经强调“不要写得太营销”，后面它又开始使用夸张表达？原因通常不是模型故意忽略你，而是它每次回答时只能看到被放进上下文窗口里的内容。
@@ -28,7 +31,7 @@
 
 下面的计量器展示了窗口里不同内容如何争抢容量。拖动对话轮数时，注意历史对话增加后，回答空间和旧信息会发生什么变化。
 
-<ContextWindowMeter />
+<ContextWindowMeter client:visible />
 
 ## 常见误区
 

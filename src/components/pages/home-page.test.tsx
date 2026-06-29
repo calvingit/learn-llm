@@ -1,35 +1,10 @@
 /* @vitest-environment jsdom */
 
 import { act, type ReactNode } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { createRoot, type Root } from "react-dom/client";
 
-import HomePage from "./page";
-
-vi.mock("next/image", () => ({
-  default: ({
-    alt,
-    priority: _priority,
-    ...props
-  }: React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }) => (
-    <img alt={alt} {...props} />
-  ),
-}));
-
-vi.mock("next/link", () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-    children: React.ReactNode;
-    href: string;
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}));
+import HomePage from "./home-page";
 
 let root: Root | undefined;
 let container: HTMLDivElement | undefined;

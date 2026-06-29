@@ -1,5 +1,3 @@
-"use client";
-
 import { type ReactNode, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -9,8 +7,6 @@ import {
   CheckCircle2,
   Cpu,
   Database,
-  FileSearch,
-  GraduationCap,
   Hand,
   Layers,
   ListChecks,
@@ -145,7 +141,7 @@ export function AiHierarchyMap() {
             })}
           </div>
           <div className="mt-5 grid grid-cols-2 gap-2">
-            {hierarchyLayers.map((layer, index) => (
+            {hierarchyLayers.map((layer) => (
               <label
                 key={layer.name}
                 data-ai-option-label={layer.value}

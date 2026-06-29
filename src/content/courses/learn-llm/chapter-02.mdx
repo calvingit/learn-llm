@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { LearningByExamples } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 机器学习最容易被误解成“机器自己突然懂了”。事实上，它并不是凭空产生经验，而是从大量例子里找出可重复的线索。你给它看的例子越代表真实世界，它越可能学到有用规律；例子越偏、越少、越乱，它学到的东西就越可能不可靠。
@@ -42,7 +45,7 @@
 
 下面的小组件会逐步展示训练样本。注意看样本增加后，机器并不是记住某一封邮件，而是在归纳“哪些线索更像垃圾邮件”。
 
-<LearningByExamples />
+<LearningByExamples client:visible />
 
 ## 常见误区
 

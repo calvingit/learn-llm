@@ -1,3 +1,6 @@
+import { CourseVisual } from "@/components/course/course-visual";
+import { SamplingPlayground } from "@/components/course/interactive-widgets";
+
 ## 核心问题
 
 为什么同一个问题问 AI 两次，答案可能不完全一样？为什么有时它很稳定，有时又突然给出很发散的表达？这和生成过程中的随机性有关，其中最常见的控制参数就是 temperature，也就是“温度”。
@@ -28,7 +31,7 @@
 
 下面的滑杆展示温度如何改变候选分布。你可以把它看成“稳定性”和“多样性”的取舍。
 
-<SamplingPlayground />
+<SamplingPlayground client:visible />
 
 ## 常见误区
 
