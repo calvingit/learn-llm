@@ -1939,7 +1939,7 @@ export function TrainingTimeline() {
   );
 }
 
-// ─── 第 24 章：开源模型生态 ────────────────────────────────────
+// ─── 第 24 章：开放权重模型生态 ────────────────────────────────
 
 const modelCategories = [
   {
@@ -1999,8 +1999,8 @@ export function ModelLandscape() {
 
   return (
     <WidgetShell
-      title="开源模型类型速览"
-      description="点击卡片，了解每种开源模型适合什么场景、有什么局限。"
+      title="模型部署方式速览"
+      description="点击卡片，了解托管、开放权重和端侧模型适合什么场景、有什么局限。"
     >
       <div className="mb-4 flex flex-wrap gap-2">
         {modelPriorities.map((item) => (
@@ -2074,6 +2074,120 @@ export function ModelLandscape() {
             </div>
           ))}
         </div>
+      </div>
+    </WidgetShell>
+  );
+}
+
+const verificationRequirements = [
+  { label: "要求原文依据", detail: "引用原始排期，并标出支持结论的具体内容。" },
+  { label: "标注不确定项", detail: "列出尚未确认的信息，不把推测写成事实。" },
+  { label: "给出验证方式", detail: "说明由谁、通过什么材料确认，以及确认时间。" },
+] as const;
+
+export function VerifiableQuestionBuilder() {
+  const [selected, setSelected] = useState<string[]>([]);
+
+  function toggle(label: string) {
+    setSelected((items) =>
+      items.includes(label) ? items.filter((item) => item !== label) : [...items, label],
+    );
+  }
+
+  return (
+    <WidgetShell title="把结论改成可核验问题" description="为供应商交付判断逐项加入独立审阅要求。">
+      <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-2">
+          {verificationRequirements.map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              aria-pressed={selected.includes(item.label)}
+              className={cn(
+                "rounded-lg border px-4 py-3 text-left text-sm font-semibold transition-colors",
+                selected.includes(item.label) ? "border-primary bg-primary/8" : "bg-card",
+              )}
+              onClick={() => toggle(item.label)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <div className="bg-muted rounded-xl p-5">
+          <p className="my-0 font-semibold">当前问题</p>
+          <p className="mt-3 mb-0 text-sm leading-7">供应商交付是否没有问题？</p>
+          {selected.length === 0 ? (
+            <p className="text-muted-foreground mt-4 mb-0 text-sm leading-6">
+              只有结论要求，回答可能听起来确定，却无法回查。
+            </p>
+          ) : (
+            <ul className="mt-4 mb-0 grid gap-2 pl-5 text-sm leading-6">
+              {verificationRequirements
+                .filter((item) => selected.includes(item.label))
+                .map((item) => (
+                  <li key={item.label}>{item.detail}</li>
+                ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </WidgetShell>
+  );
+}
+
+const modalityTasks = [
+  {
+    label: "改写邮件",
+    route: "纯文本模型即可",
+    detail: "输入和输出都以文字为主，重点比较写作质量、成本和隐私设置。",
+  },
+  {
+    label: "提取扫描件表格",
+    route: "OCR 或视觉模型",
+    detail: "先识别版面与文字，再核对表格行列；模糊扫描件需要人工抽查。",
+  },
+  {
+    label: "分析语音语气",
+    route: "音频多模态",
+    detail: "仅转写会丢失停顿和语气；上传前检查录音授权与隐私。",
+  },
+  {
+    label: "理解长视频动作",
+    route: "视频专用处理",
+    detail: "需要抽帧、时间定位或专用视频模型，成本和延迟通常更高。",
+  },
+] as const;
+
+export function ModalityChooser() {
+  const [activeLabel, setActiveLabel] = useState<(typeof modalityTasks)[number]["label"]>(
+    modalityTasks[0].label,
+  );
+  const active = modalityTasks.find((item) => item.label === activeLabel) ?? modalityTasks[0];
+
+  return (
+    <WidgetShell
+      title="信息形态选择器"
+      description="选择任务，比较纯文本、识别工具、多模态和专用处理路线。"
+    >
+      <div className="flex flex-wrap gap-2">
+        {modalityTasks.map((item) => (
+          <button
+            key={item.label}
+            type="button"
+            aria-pressed={activeLabel === item.label}
+            className={cn(
+              "rounded-full border px-3 py-2 text-sm font-semibold transition-colors",
+              activeLabel === item.label ? "border-primary bg-primary text-white" : "bg-card",
+            )}
+            onClick={() => setActiveLabel(item.label)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="bg-muted mt-5 rounded-xl p-5">
+        <p className="text-primary my-0 text-sm font-semibold">推荐路线：{active.route}</p>
+        <p className="mt-3 mb-0 text-sm leading-7">{active.detail}</p>
       </div>
     </WidgetShell>
   );

@@ -3,16 +3,20 @@ import { getAdjacentChapters, getChapterBySlug, learnLLMChapters } from "./cours
 
 describe("learnLLMChapters", () => {
   it("defines an expanded course with contiguous slugs and orders", () => {
-    expect(learnLLMChapters.length).toBeGreaterThan(24);
-    // Verify all 25 content chapters are present in order
-    const chapterSlugs = learnLLMChapters.map((c) => c.slug);
-    for (let i = 1; i <= 25; i++) {
-      expect(chapterSlugs).toContain(`chapter-${String(i).padStart(2, "0")}`);
-    }
-    // Verify all 7 unit summaries are present
-    for (let i = 1; i <= 7; i++) {
-      expect(chapterSlugs).toContain(`unit-0${i}-summary`);
-    }
+    expect(learnLLMChapters).toHaveLength(32);
+    const chapterSlugs = learnLLMChapters
+      .map((chapter) => chapter.slug)
+      .filter((slug) => slug.startsWith("chapter-"));
+    const summarySlugs = learnLLMChapters
+      .map((chapter) => chapter.slug)
+      .filter((slug) => slug.startsWith("unit-"));
+
+    expect(chapterSlugs).toEqual(
+      Array.from({ length: 25 }, (_, index) => `chapter-${String(index + 1).padStart(2, "0")}`),
+    );
+    expect(summarySlugs).toEqual(
+      Array.from({ length: 7 }, (_, index) => `unit-${String(index + 1).padStart(2, "0")}-summary`),
+    );
     // Verify ascending orders
     const orders = learnLLMChapters.map((c) => c.order);
     for (let i = 1; i < orders.length; i++) {
@@ -41,6 +45,13 @@ describe("learnLLMChapters", () => {
         "Workflow：不要追求一个万能 Prompt",
       ]),
     );
+  });
+
+  it("uses open-weight terminology for chapter 24 metadata", () => {
+    expect(getChapterBySlug("chapter-24")).toMatchObject({
+      title: "开放权重模型：除了托管服务还有什么选择？",
+      description: expect.stringContaining("开放权重"),
+    });
   });
 
   it("finds chapters and their neighbors by slug", () => {

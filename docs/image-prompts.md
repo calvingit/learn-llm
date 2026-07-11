@@ -355,7 +355,7 @@ Style: flat vector illustration, progressive color palette from cool blue (raw t
 
 ---
 
-## 第 24 章：开源模型
+## 第 24 章：开放权重模型
 
 **文件名：** `chapter-24-model-landscape.png`
 
@@ -364,7 +364,7 @@ Style: flat vector illustration, progressive color palette from cool blue (raw t
 **提示词：**
 
 ```
-An educational illustration showing the model selection landscape as a decision map or compass. At center: a user with a thought bubble "我的场景是什么?". Branching outward, three paths: Path 1 "商业闭源模型" (icon: cloud/API) — for general tasks, easy to use, no deployment needed. Path 2 "开源模型" (icon: server/local) — for privacy needs, customization, cost control, but requires technical capability. Path 3 "小型端侧模型" (icon: smartphone) — for offline use, low latency, simple tasks. Each path shows key trade-offs: capability vs cost vs privacy vs complexity. Not a ranking — different scenarios need different choices.
+An educational illustration showing the model selection landscape as a decision map or compass. At center: a user with a thought bubble "我的场景是什么?". Branching outward, three paths: Path 1 "托管模型" (icon: cloud/API) — for general tasks, easy to use, no deployment needed. Path 2 "开放权重模型" (icon: server/local) — for privacy needs, customization, cost control, but requires technical capability and license review. Path 3 "小型端侧模型" (icon: smartphone) — for offline use, low latency, simple tasks. Each path shows key trade-offs: capability vs cost vs privacy vs complexity. Not a ranking — different scenarios need different choices.
 Style: flat vector illustration, warm neutral palette with color-coded paths, clean decision-tree/map layout, educational textbook style. 16:9.
 ```
 

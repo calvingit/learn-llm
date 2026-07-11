@@ -1,4 +1,5 @@
 export type QuizQuestion = {
+  kind: "concept" | "scenario";
   question: string;
   options: string[];
   correctIndex: number;
@@ -17,18 +18,20 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-05",
     questions: [
       {
+        kind: "concept",
         question: "AI、机器学习、深度学习、大模型之间的关系是什么？",
         options: [
-          "它们是并列的四种不同技术",
           "AI 包含机器学习，机器学习包含深度学习，大模型是深度学习的一种实现",
+          "它们是并列的四种不同技术",
           "只有大模型属于 AI，其他都是传统技术",
           "机器学习和深度学习本质是一样的",
         ],
-        correctIndex: 1,
+        correctIndex: 0,
         explanation:
           "AI 是总目标，机器学习是实现方法，深度学习是更强的机器学习，大模型是目前最强的一类深度学习实现。它们层层包含，每一层都基于前一层的基础。",
       },
       {
+        kind: "concept",
         question: "GPT 路线与其他 AI 技术最大的不同是什么？",
         options: [
           "它比其他技术更聪明",
@@ -41,6 +44,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "GPT 路线的核心创新是将多种任务统一为文本生成——无论是翻译、总结还是问答，都变成「根据上下文预测下一个 token」。这让普通人无需编程就能与 AI 协作。",
       },
       {
+        kind: "scenario",
         question: "遇到一个新 AI 产品时，应该优先判断什么？",
         options: [
           "它能不能取代人类的工作",
@@ -59,6 +63,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-10",
     questions: [
       {
+        kind: "concept",
         question: "大模型「眼中」的文字单位是什么？",
         options: ["完整的句子", "单个汉字", "Token（文字积木）", "自然段落"],
         correctIndex: 2,
@@ -66,18 +71,20 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "模型不读句子，它把文字切成 token 再处理。一个 token 可能是一个字、一个词或一个词的一部分。输入、输出、费用最终都绕不开 token。",
       },
       {
-        question: "关于上下文窗口，以下哪种说法正确？",
+        kind: "scenario",
+        question: "一段长对话开始遗漏最早的要求时，最合理的处理是什么？",
         options: [
-          "模型可以记住所有历史对话，永远不会忘",
-          "模型一次只能「看到」当前窗口内的内容，窗口外的信息需要外部系统管理",
-          "上下文窗口越大，模型就越聪明",
-          "上下文窗口只影响图片理解，不影响文字对话",
+          "继续追加消息，模型会自动恢复所有历史内容",
+          "整理关键约束和阶段摘要，重新放入当前上下文",
+          "把温度调高，让模型更容易想起以前的内容",
+          "删除当前问题，只保留最早的全部聊天记录",
         ],
         correctIndex: 1,
         explanation:
-          "上下文窗口不是长期记忆。模型只能「看到」当前窗口里的 token 序列，窗口外的内容需要摘要、数据库或本地存储等外部系统来管理。",
+          "上下文窗口不是长期记忆。把关键约束和阶段摘要重新放入当前上下文，能减少窗口外信息丢失带来的偏移；温度不能恢复模型看不到的内容。",
       },
       {
+        kind: "concept",
         question: "Temperature（温度）参数控制的是什么？",
         options: [
           "模型的聪明程度",
@@ -96,6 +103,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-13",
     questions: [
       {
+        kind: "concept",
         question: "关于大模型的「推理」，以下哪个理解最准确？",
         options: [
           "模型像人类一样在真正地思考",
@@ -108,18 +116,20 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "模型基于海量数据训练出的模式匹配能力，能表现得很像推理——分步骤、给理由、做比较。但这些步骤本身也可能是错的。把「看起来聪明」和「能被检查」分开，才是真正理解推理。",
       },
       {
-        question: "怎样提问能有效减少模型「胡说八道」（幻觉）？",
+        kind: "scenario",
+        question: "模型总结合同后给出一个关键数字，但没有出处。下一步怎样追问最便于核验？",
         options: [
-          "把问题写得越长越好",
-          "要求模型给出依据、步骤，让结论可以被复核",
-          "只问最简单的是非题",
-          "反复问同一个问题，直到得到满意的答案",
+          "让模型用更确定的语气再说一次",
+          "要求标出对应原文、资料缺口和独立验证方式",
+          "让模型把答案扩写成更长的分析",
+          "不断重问，选择出现次数最多的数字",
         ],
         correctIndex: 1,
         explanation:
-          "好 Prompt 的核心是减少模型的猜测空间——给出背景、任务、材料、边界、格式和检查点。让输出有依据、可复核，比碰运气反复问更有效。",
+          "验证型追问要把结论连接到原始材料，暴露不确定项，并给出独立核验动作。模型重复、自检或多数一致都不能替代原文和工具。",
       },
       {
+        kind: "concept",
         question: "应对幻觉风险的正确态度是什么？",
         options: [
           "模型有幻觉，所以完全不要用",
@@ -138,6 +148,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-16",
     questions: [
       {
+        kind: "concept",
         question: "RAG（检索增强生成）的核心作用是什么？",
         options: [
           "让模型的回答速度变得更快",
@@ -150,18 +161,20 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "RAG 给模型开卷考试——先检索相关资料，再基于资料生成回答。有据可查，但检索可能找错、资料可能过时、生成可能误解。RAG 降低幻觉，不消灭幻觉。",
       },
       {
-        question: "Embedding 让机器按什么方式查找资料？",
+        kind: "scenario",
+        question: "员工问“病假需要什么证明”，系统只找到了“年假余额”。最准确的判断是什么？",
         options: [
-          "按精确的关键词匹配",
-          "按文字转换成的「语义坐标」，意思相近的内容在空间中距离更近",
-          "按文件的大小和格式",
-          "按资料的发布时间排序",
+          "都属于人事主题，所以检索已经成功",
+          "语义相近不等于能回答问题，还要检查片段是否真正相关",
+          "只要增加上下文窗口，错误片段就会变正确",
+          "应该取消权限和时间过滤，让系统看到更多资料",
         ],
         correctIndex: 1,
         explanation:
-          "Embedding 将文字转成语义向量——「下雨」和「降水」在空间中距离近，「下雨」和「股票」距离远。但语义相近不等于能回答当前问题，检索只是第一步。",
+          "Embedding 能找语义相近的候选，但“人事主题相近”不代表片段支持病假证明问题。还要检查相关性、适用范围、权限和更新时间。",
       },
       {
+        kind: "concept",
         question: "「对齐」训练的主要目的是什么？",
         options: [
           "让模型运行得更快、更省电",
@@ -171,7 +184,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
         ],
         correctIndex: 1,
         explanation:
-          "对齐是能力和边界的平衡：预训练给知识，SFT 教当助手，RLHF 让模型学会什么时候该说「我不确定」或「我不能帮你做这件事」。不是一味服从，而是知道底线。",
+          "对齐可以组合监督示范、偏好数据、安全训练、评估和系统防护，改善帮助性、诚实性与安全。RLHF 是其中一种方法，不代表全部对齐。",
       },
     ],
   },
@@ -180,6 +193,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-20",
     questions: [
       {
+        kind: "concept",
         question: "Prompt 的本质是什么？",
         options: [
           "一种需要背诵的神秘咒语",
@@ -192,18 +206,20 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "Prompt 不是咒语，是上下文控制——告诉模型它是谁、要做什么、不能做什么、输出什么格式。说清楚这六件事（背景、任务、材料、边界、格式、检查），比华丽的措辞重要得多。",
       },
       {
-        question: "工具调用（Tool Calling）的实际机制是怎样的？",
+        kind: "scenario",
+        question: "模型说“我已经发送邮件”，但系统日志没有发送记录。最合理的判断是什么？",
         options: [
-          "模型直接操作电脑上的软件和文件",
-          "模型输出调用意图，外部调度系统负责执行，结果返回给模型参考",
-          "模型自己编写代码来调用工具",
-          "工具调用完全不需要模型参与，是浏览器的功能",
+          "模型文字已经构成发送成功的证据",
+          "外部系统可能没有执行工具，应以调用结果和审计日志为准",
+          "只要模型再次确认，邮件就一定发送了",
+          "工具调用不需要权限、错误处理或日志",
         ],
         correctIndex: 1,
         explanation:
-          "模型只会输出文字——它说「我想搜索这个关键词」，外部调度系统（像调度台）识别意图并执行搜索，结果再塞回上下文。权限校验、错误处理、审计日志必须由应用层实现。",
+          "模型可以提出调用意图，但真实执行由外部系统完成。是否成功要看工具返回值和审计日志；权限校验与错误处理不能靠模型自己声明。",
       },
       {
+        kind: "concept",
         question: "Agent 的核心工作循环是什么？",
         options: [
           "提问 → 回答 → 结束",
@@ -222,6 +238,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "chapter-22",
     questions: [
       {
+        kind: "concept",
         question: "Workflow 方法的核心做法是什么？",
         options: [
           "写一个超长的万能 Prompt，让模型一次完成所有任务",
@@ -234,6 +251,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "不要追求万能 Prompt。把任务拆成可检查的小步骤——收集材料、AI 草稿、人类审核、事实核对、改写定稿。每一步输入输出明确，错误更容易定位和修正。",
       },
       {
+        kind: "scenario",
         question: "以下哪种做法违反了 AI 协作边界的原则？",
         options: [
           "让 AI 给一篇博客改语气",
@@ -246,6 +264,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "投资决策属于高风险场景。AI 可以提供信息和框架，但涉及健康、法律、财务、安全等领域的最终决定，必须有专业人类复核。不是 AI 不能碰这些领域，而是人类不能放弃判断责任。",
       },
       {
+        kind: "concept",
         question: "判断一个任务是否适合交给 AI，关键看什么？",
         options: [
           "任务有多复杂",
@@ -264,6 +283,7 @@ export const unitQuizData: Record<string, UnitQuizData> = {
     nextChapterSlug: "",
     questions: [
       {
+        kind: "concept",
         question: "「蒸馏」技术用什么比喻来理解最贴切？",
         options: [
           "把水烧开变成蒸汽，取其精华",
@@ -276,28 +296,30 @@ export const unitQuizData: Record<string, UnitQuizData> = {
           "蒸馏就像老师教学生——大模型生成高质量回答作为「教材」，小模型模仿学习。小模型学会常见任务的回答方式，但复杂推理和冷门知识会丢失。合适比最大更重要。",
       },
       {
-        question: "大模型训练中，预训练和后训练的分工是什么？",
+        kind: "concept",
+        question: "关于大模型训练流程，哪种描述更准确？",
         options: [
-          "预训练教聊天，后训练教写作",
-          "预训练学通用知识和语言能力，后训练（SFT/RL/RLHF）教格式、练专精、定边界",
-          "预训练和后训练没有本质区别，只是名称不同",
-          "预训练负责对齐安全，后训练负责学习知识",
+          "所有模型都必须依次完成 SFT、RL 和 RLHF",
+          "预训练建立通用能力，后训练可组合不同方法塑造行为，评估持续检查效果",
+          "SFT 只负责格式，RLHF 只负责拒绝危险请求",
+          "只要预训练数据足够多，就不需要后训练和评估",
         ],
         correctIndex: 1,
         explanation:
-          "训练的四个阶段接力：预训练打地基（决定能力天花板），SFT 教对话格式（学会当助手），RL 在可验证任务上练专精，RLHF 让模型知道安全边界。每一步分工不同，缺一不可。",
+          "训练没有适用于所有模型的唯一配方。预训练学习通用模式，后训练可以使用监督示范、偏好优化或可验证奖励，持续评估负责确认能力和边界。",
       },
       {
-        question: "选择使用哪个 AI 模型时，最重要的考量是什么？",
+        kind: "scenario",
+        question: "团队要在内网处理敏感文档，评估开放权重模型时最先应确认什么？",
         options: [
-          "永远选榜单上排名最高的那个",
-          "看场景需求：隐私、成本、延迟、部署能力比「最强」更实际",
-          "只选开源的，不用商业模型",
-          "只选最便宜的那个",
+          "模型能下载，所以必然允许任意商用",
+          "许可证、隐私边界、任务效果、硬件和维护能力是否匹配",
+          "参数最多的模型一定最适合内网",
+          "只比较一次排行榜分数即可",
         ],
         correctIndex: 1,
         explanation:
-          "选模型看场景，不看排行榜。商业模型省心但依赖外部，开源模型可控但需要部署能力，端侧模型灵活但能力有限。够用、便宜、快、可本地运行——往往比单纯「最强」更实用。",
+          "开放权重不自动等于开源或可商用。应核对具体许可证，并用真实任务比较隐私、质量、成本、延迟、硬件和维护要求。",
       },
     ],
   },

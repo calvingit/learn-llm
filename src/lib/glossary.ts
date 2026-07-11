@@ -61,6 +61,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "基础概念",
   },
   {
+    zh: "自监督学习",
+    en: "Self-Supervised Learning",
+    definition:
+      "从原始数据本身构造训练目标，例如根据前文预测后文，不需要人逐条写答案。现代语言、视觉和语音模型常用它做大规模预训练。",
+    chapter: "chapter-02",
+    category: "基础概念",
+  },
+  {
     zh: "深度学习",
     en: "Deep Learning",
     definition:
@@ -220,7 +228,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "推理",
     en: "Reasoning",
     definition:
-      "模型生成类似推理过程的分步骤文本。不等于人类思考，但分步骤表达可以让中间过程更可见、更可检查。关键不是'像不像人'，而是'能不能被检查'。",
+      "模型可以生成分步骤的解题记录，但这些文字不一定忠实反映内部计算。关键是让条件、依据、计算和结果能够被独立检查。",
     chapter: "chapter-10",
     category: "可靠性",
   },
@@ -270,7 +278,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "思维链（CoT）",
     en: "Chain of Thought",
     definition:
-      "让模型把推理过程一步步写出来。不是为了显得聪明，而是让中间步骤变得可见、可检查——每一步对不对，人能看。",
+      "让模型生成分步骤的解题说明。它可以形成可检查的中间产物，但不一定忠实记录模型内部怎样得到答案，仍需验证条件、依据和结果。",
     chapter: "chapter-10",
     category: "提示与交互",
   },
@@ -286,7 +294,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "自洽性",
     en: "Self-Consistency",
     definition:
-      "让模型生成多条独立推理路径，再比较它们是否收敛到一致答案。随机错误会在多次采样中被稀释，但系统性的知识盲区不会因此消失。",
+      "让模型生成多个候选解法，再比较答案是否收敛。它在部分可核验任务中可能有帮助，但多个回答也可能共享同一个错误前提。",
     chapter: "chapter-10",
     category: "提示与交互",
   },
@@ -338,7 +346,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "预训练",
     en: "Pre-training",
     definition:
-      "大模型训练的第一阶段：在海量文本（网页、书籍、代码、论文等）上学习预测下一个 token，建立语言模式、常识关联和基础能力。",
+      "建立基座模型通用能力的训练过程：从大量文本、代码或其他数据中学习模式，例如根据前文预测下一个 token。",
     chapter: "chapter-23",
     category: "训练与模型",
   },
@@ -346,7 +354,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "SFT（监督微调）",
     en: "Supervised Fine-Tuning",
     definition:
-      "大模型训练的第二阶段：用大量'问题→理想答案'的示范数据训练模型遵循指令、按格式回答、理解用户意图。让模型从续写器变成助手。",
+      "一种常见后训练方法：用'请求→理想回答'示范改善指令遵循、任务行为和表达方式。它不是所有模型固定的第二阶段。",
     chapter: "chapter-23",
     category: "训练与模型",
   },
@@ -354,7 +362,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "RL（强化学习）",
     en: "Reinforcement Learning",
     definition:
-      "大模型训练的第三阶段：在可验证任务（代码可跑测试、数学可核对答案）上通过奖励信号反复训练，提升模型在特定能力上的表现。",
+      "一种可选后训练方法：利用奖励信号改善行为，例如在代码、数学等可验证任务中训练。效果取决于奖励是否准确。",
     chapter: "chapter-23",
     category: "训练与模型",
   },
@@ -362,7 +370,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     zh: "RLHF（基于人类反馈的强化学习）",
     en: "Reinforcement Learning from Human Feedback",
     definition:
-      "大模型训练的第四阶段：根据人类偏好反馈训练模型——更有帮助、更诚实、更安全。帮助模型在风险请求中拒绝，在不确定时保守。",
+      "利用人类偏好反馈训练模型的一类方法，可改善帮助性、诚实性和安全性。它是偏好对齐的方法之一，不等同于全部对齐。",
     chapter: "chapter-23",
     category: "训练与模型",
   },
@@ -431,10 +439,10 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "训练与模型",
   },
   {
-    zh: "开源模型",
-    en: "Open-Source Model",
+    zh: "开放权重模型",
+    en: "Open-Weight Model",
     definition:
-      "可以自由下载、本地部署、针对特定任务微调的模型（如 Llama、Qwen、DeepSeek）。优势是可控和可定制，但需要技术能力和硬件成本。",
+      "模型参数可以下载和自行部署，但训练数据、代码和使用权利未必全部开放。能否修改或商用要查看具体许可证。",
     chapter: "chapter-24",
     category: "训练与模型",
   },

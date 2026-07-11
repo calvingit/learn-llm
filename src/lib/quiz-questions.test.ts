@@ -17,20 +17,31 @@ describe("quiz-questions", () => {
     ]);
   });
 
-  it("each unit has 2-3 questions with exactly one correct answer", () => {
-    for (const data of Object.values(unitQuizData)) {
-      expect(data.questions.length).toBeGreaterThanOrEqual(1);
+  it("each unit has 2-3 questions including at least one scenario", () => {
+    const correctIndexes = new Set<number>();
+
+    for (const [slug, data] of Object.entries(unitQuizData)) {
+      expect(data.questions.length).toBeGreaterThanOrEqual(2);
       expect(data.questions.length).toBeLessThanOrEqual(3);
+      expect(
+        data.questions.some((question) => question.kind === "scenario"),
+        slug,
+      ).toBe(true);
 
       for (const q of data.questions) {
-        // 每题至少2个选项，正确选项索引在有效范围内
-        expect(q.options.length).toBeGreaterThanOrEqual(2);
+        expect(["concept", "scenario"]).toContain(q.kind);
+        expect(q.options).toHaveLength(4);
+        expect(new Set(q.options).size).toBe(q.options.length);
+        expect(q.options.every((option) => option.trim().length > 0)).toBe(true);
         expect(q.correctIndex).toBeGreaterThanOrEqual(0);
         expect(q.correctIndex).toBeLessThan(q.options.length);
         expect(q.question.length).toBeGreaterThan(0);
         expect(q.explanation.length).toBeGreaterThan(0);
+        correctIndexes.add(q.correctIndex);
       }
     }
+
+    expect(correctIndexes.size).toBeGreaterThanOrEqual(3);
   });
 
   it("unit-07 has no next chapter (last unit)", () => {

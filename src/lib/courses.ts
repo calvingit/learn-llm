@@ -217,9 +217,9 @@ export const learnLLMChapters: CourseChapter[] = [
   },
   {
     slug: "chapter-24",
-    title: "开源模型：除了 ChatGPT 还有什么选择？",
+    title: "开放权重模型：除了托管服务还有什么选择？",
     unit: "第七单元：如果你还想知道更多",
-    description: "认识主流开源模型类型，理解各自适合的场景和局限性。",
+    description: "区分开源、开放权重与可商用，理解自建模型和托管服务的取舍。",
     order: 24,
   },
   {
@@ -234,7 +234,7 @@ export const learnLLMChapters: CourseChapter[] = [
     title: "第七单元总结",
     unit: "第七单元：如果你还想知道更多",
     description:
-      "回顾蒸馏、训练流程、开源模型选择和多模态能力，完成从'AI 是什么'到'怎么用'到'怎么来'的完整学习路径。",
+      "回顾蒸馏、训练流程、开放权重模型选择和多模态能力，完成从'AI 是什么'到'怎么用'到'怎么来'的完整学习路径。",
     order: 25.5,
   },
 ];

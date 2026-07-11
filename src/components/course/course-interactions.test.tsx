@@ -14,9 +14,11 @@ import {
   EmbeddingMap,
   LearningByExamples,
   ModelLandscape,
+  ModalityChooser,
   RAGSimulator,
   TokenCostCalculator,
   ToolCallingStepper,
+  VerifiableQuestionBuilder,
   WorkflowBuilder,
 } from "./interactive-widgets";
 import { learnLLMChapters } from "@/lib/courses";
@@ -219,6 +221,38 @@ describe("course client interactions", () => {
 
     expect(view.textContent).toContain("把动作按时间顺序排列");
     expect(view.textContent).not.toContain("计算 5 - 2 + 12 = 15");
+  });
+
+  it("builds a verifiable question from independent review requirements", () => {
+    const view = render(<VerifiableQuestionBuilder />);
+
+    expect(view.textContent).toContain("供应商交付是否没有问题");
+    expect(view.textContent).not.toContain("引用原始排期");
+
+    clickButtonByText(view, "要求原文依据");
+    clickButtonByText(view, "标注不确定项");
+    clickButtonByText(view, "给出验证方式");
+
+    expect(view.textContent).toContain("引用原始排期");
+    expect(view.textContent).toContain("列出尚未确认的信息");
+    expect(view.textContent).toContain("说明由谁、通过什么材料确认");
+  });
+
+  it("recommends processing routes by information modality", () => {
+    const view = render(<ModalityChooser />);
+
+    expect(view.textContent).toContain("纯文本模型即可");
+
+    clickButtonByText(view, "提取扫描件表格");
+    expect(view.textContent).toContain("OCR 或视觉模型");
+
+    clickButtonByText(view, "分析语音语气");
+    expect(view.textContent).toContain("音频多模态");
+    expect(view.textContent).toContain("隐私");
+
+    clickButtonByText(view, "理解长视频动作");
+    expect(view.textContent).toContain("视频专用处理");
+    expect(view.textContent).toContain("成本");
   });
 
   it("reveals tool-calling traffic as each step executes", () => {

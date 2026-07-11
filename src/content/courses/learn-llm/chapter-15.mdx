@@ -21,7 +21,7 @@ import { ModelEvolutionSimulator } from "@/components/course/interactive-widgets
 
 ## 概念拆解
 
-对齐通常发生在后训练阶段。模型先通过预训练成为基座模型，具备续写和模仿能力；再通过监督微调学习“问题到答案”的行为格式；然后通过人类偏好反馈、规则数据、安全评估等方式，学习更合适的行为边界。
+对齐通常发生在后训练和持续评估中。团队可以使用监督示范、偏好数据、规则数据、安全训练和系统层防护，让模型更有帮助、更诚实、更安全，并更稳定地遵循合理指令。RLHF 是其中一种方法，不代表全部对齐；真实产品还需要权限、审核和监控配合。
 
 例如，用户要求“帮我绕过门禁”，一个未对齐模型可能顺着写危险步骤；经过对齐的助手应该识别风险，拒绝提供可执行伤害步骤，并转向合规建议，比如联系管理员、补办权限或说明安全制度。
 
@@ -76,7 +76,7 @@ import { ModelEvolutionSimulator } from "@/components/course/interactive-widgets
 ## 延伸阅读
 
 - 回顾本单元的核心线索和关键收获 → [第四单元总结](/courses/learn-llm/unit-04-summary)
-- 对齐是模型安全行为的重要保障——[第 23 章：大模型是怎样训练出来的](/courses/learn-llm/chapter-23)把 RLHF 放在完整训练流程中讲解
+- 对齐是模型安全行为的重要保障——[第 23 章：大模型是怎样训练出来的](/courses/learn-llm/chapter-23)把偏好数据、安全训练和评估放在完整流程中讲解
 - 即使有 RAG 和 Embedding，幻觉仍然可能存在，再次回顾[第 12 章：幻觉](/courses/learn-llm/chapter-12)理解残存风险
 
 ## 一句话总结
